@@ -2,7 +2,7 @@ package computing;
 
 import queries.Query;
 
-public class Variable implements Term {
+public class Variable implements AnswerTerm {
 
     int pointInTime;
     Query query;

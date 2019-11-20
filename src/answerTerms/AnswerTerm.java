@@ -1,6 +1,6 @@
 package computing;
 
-public interface Term {
+public interface AnswerTerm {
 
     public String toString();
 

@@ -1,19 +1,19 @@
 package computing;
 
+import answerTerms.*;
 import queries.*;
 
-public class Phi extends Function {
+public class Function {
 
-    public Term compute( int timeInPoint, Query query ) {
-        if ( timeInPoint == 0 ) {
+    public AnswerTerm compute( int pointInTime, Query query ) {
+        if ( pointInTime == 0 ) {
             return phiZero( query );
         } else {
-            Term termI = phiI( timeInPoint, query );
-            return replaceVariables( timeInPoint, termI );
+            return replaceVariables( pointInTime, phiI( pointInTime, query ) );
         }
     }
 
-    private Term phiZero( Query query ) {
+    private AnswerTerm phiZero( Query query ) {
         if ( query instanceof Conjunction ) {
             return conjunction( phiZero( ( (Conjunction) query ).getSubquery1() ), phiZero( ( (Conjunction) query ).getSubquery2() ) );
         } else if ( query instanceof Disjunction ) {
@@ -27,11 +27,11 @@ public class Phi extends Function {
         } else if ( query instanceof Since ) {
             return phiZero( ( (Since) query ).getSubquery2() );
         } else {
-            return new AnswerTerm( query, 0 );
+            return new AnswerSet( query, 0 );
         }
     }
 
-    private Term phiI( int i, Query query ) {
+    private AnswerTerm phiI( int i, Query query ) {
         if ( query instanceof Conjunction ) {
             return conjunction( phiI( i, ( (Conjunction) query ).getSubquery1() ), phiI( i, ( (Conjunction) query ).getSubquery2() ) );
         } else if ( query instanceof Disjunction ) {
@@ -62,20 +62,20 @@ public class Phi extends Function {
             }
 
         } else {
-            return new AnswerTerm( query, i );
+            return new AnswerSet( query, i );
         }
     }
 
-    private Term replaceVariables( int timeInPoint, Term term ) {
-        if ( term instanceof TermDisjunction ) {
-            TermDisjunction tD = (TermDisjunction) term;
-            return disjunction( replaceVariables( timeInPoint, tD.getTerm1() ), replaceVariables( timeInPoint, tD.getTerm2() ) );
+    private AnswerTerm replaceVariables( int timeInPoint, AnswerTerm answerTerm ) {
+        if ( answerTerm instanceof AnswerTermDisjunction ) {
+            AnswerTermDisjunction tD = (AnswerTermDisjunction) answerTerm;
+            return disjunction( replaceVariables( timeInPoint, tD.getAnswerTerm1() ), replaceVariables( timeInPoint, tD.getAnswerTerm2() ) );
         }
-        if ( term instanceof TermConjunction ) {
-            TermConjunction tC = (TermConjunction) term;
-            return conjunction( replaceVariables( timeInPoint, tC.getTerm1() ), replaceVariables( timeInPoint, tC.getTerm2() ) );
-        } else if ( term instanceof Variable ) {
-            Variable v = (Variable) term;
+        if ( answerTerm instanceof AnswerTermConjunction ) {
+            AnswerTermConjunction tC = (AnswerTermConjunction) answerTerm;
+            return conjunction( replaceVariables( timeInPoint, tC.getAnswerTerm1() ), replaceVariables( timeInPoint, tC.getAnswerTerm2() ) );
+        } else if ( answerTerm instanceof Variable ) {
+            Variable v = (Variable) answerTerm;
             if ( v.getPointInTime() < timeInPoint ) {
                 Query q = v.getQuery();
                 Query subQ;
@@ -94,7 +94,47 @@ public class Phi extends Function {
                 return replaceVariables( timeInPoint, phiI( v.getPointInTime() + 1, subQ ) );
             }
         }
-        return term;
+        return answerTerm;
+    }
+
+
+
+    AnswerTerm conjunction( AnswerTerm answerTerm1, AnswerTerm answerTerm2 ) {
+        if ( answerTerm1.toString().equals( answerTerm2.toString() ) ) {
+            return answerTerm1;
+        }
+        if ( answerTerm1 instanceof AnswerSet && answerTerm2 instanceof AnswerSet ) {
+            AnswerSet aT1 = (AnswerSet) answerTerm1;
+            AnswerSet aT2 = (AnswerSet) answerTerm2;
+            //return new AnswerSet(new Conjunction(aT1.getQuery(),aT2.getQuery()));
+            if ( aT1.getAnswer().contains( aT2.getAnswer() ) ) {
+                return new AnswerSet( new AtemporalQuery( aT1.getAnswer() ), -1 );
+            }
+            if ( aT2.getAnswer().contains( aT1.getAnswer() ) ) {
+                return new AnswerSet( new AtemporalQuery( aT2.getAnswer() ), -1 );
+            }
+            return new AnswerSet( new AtemporalQuery( "(" + aT1.getAnswer() + " n " + aT2.getAnswer() + ")" ), -1 );
+        }
+        return new AnswerTermConjunction( answerTerm1, answerTerm2 );
+    }
+
+    AnswerTerm disjunction( AnswerTerm answerTerm1, AnswerTerm answerTerm2 ) {
+        if ( answerTerm1.toString().equals( answerTerm2.toString() ) ) {
+            return answerTerm1;
+        }
+        if ( answerTerm1 instanceof AnswerSet && answerTerm2 instanceof AnswerSet ) {
+            AnswerSet aT1 = (AnswerSet) answerTerm1;
+            AnswerSet aT2 = (AnswerSet) answerTerm2;
+            //return new AnswerSet(new Disjunction(aT1.getQuery(),aT2.getQuery()));
+            if ( aT1.getAnswer().contains( aT2.getAnswer() ) ) {
+                return new AnswerSet( new AtemporalQuery( aT1.getAnswer() ), -1 );
+            }
+            if ( aT2.getAnswer().contains( aT1.getAnswer() ) ) {
+                return new AnswerSet( new AtemporalQuery( aT2.getAnswer() ), -1 );
+            }
+            return new AnswerSet( new AtemporalQuery( "(" + aT1.getAnswer() + " u " + aT2.getAnswer() + ")" ), -1 );
+        }
+        return new AnswerTermDisjunction( answerTerm1, answerTerm2 );
     }
 
 }

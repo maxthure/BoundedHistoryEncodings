@@ -2,13 +2,13 @@ package computing;
 
 import queries.*;
 
-public class AnswerTerm implements Term {
+public class AnswerSet implements AnswerTerm {
 
     int pointInTime;
     Query query;
     String answer;
 
-    public AnswerTerm( Query query, int pointInTime ) {
+    public AnswerSet( Query query, int pointInTime ) {
         this.query = query;
         this.pointInTime = pointInTime;
         if ( query instanceof AtemporalQuery ) {
