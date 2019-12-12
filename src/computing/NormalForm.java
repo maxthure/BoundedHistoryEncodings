@@ -1,104 +1,159 @@
 package computing;
 
-public class NormalForm extends Function {
+import answerTerms.AnswerTerm;
+import answerTerms.AnswerTermConjunction;
+import answerTerms.AnswerTermDisjunction;
 
-    public Term compute( Term term ) {
-        Term term1 = normalizeDNF( term );
-        return simplify( term1 );
+import java.util.HashSet;
+
+public class NormalForm {
+
+    public AnswerTerm prepare( AnswerTerm answerTerm ) {
+        HashSet<HashSet<AnswerTerm>> set = new HashSet<>();
+        HashSet<AnswerTerm> temp = new HashSet<>();
+        temp.add( answerTerm );
+        set.add( temp );
+        HashSet<HashSet<AnswerTerm>> tem = normalize( set );
+        return transformToAnswerTerms( tem );
     }
 
-    //TODO reevaluate
-    /*
-    private Term normalize( Term term ) {
-        if ( term instanceof TermDisjunction ) {
-            TermDisjunction tD = (TermDisjunction) term;
-            return disjunction( normalize( tD.term1 ), normalize( tD.term2 ) );
-        }
-        if ( term instanceof TermConjunction ) {
-            TermConjunction tC = (TermConjunction) term;
-            if ( tC.term1 instanceof TermDisjunction ) {
-                TermDisjunction subtD = (TermDisjunction) tC.term1;
-                return disjunction( conjunction( normalize( subtD.term1 ), normalize( tC.term2 ) ), conjunction( normalize( subtD.term2 ), normalize( tC.term2 ) ) );
-            }
-            if ( tC.term1 instanceof TermConjunction ) {
-                TermConjunction subtC = (TermConjunction) tC.term1;
-                return conjunction( normalize( subtC ), normalize( tC.term2 ) );
-            }
-            if ( tC.term2 instanceof TermDisjunction ) {
-                TermDisjunction subtD = (TermDisjunction) tC.term2;
-                return disjunction( conjunction( normalize( tC.term1 ), normalize( subtD.term1 ) ), conjunction( normalize( tC.term1 ), normalize( subtD.term2 ) ) );
-            }
-            if ( tC.term2 instanceof TermConjunction ) {
-                TermConjunction subtC = (TermConjunction) tC.term2;
-                return conjunction( normalize( tC.term1 ), normalize( subtC ) );
-            }
-        }
-        return term;
-    }
-*/
-    public Term normalizeDNF( Term term ) {
-        if ( term instanceof TermDisjunction ) {
-            TermDisjunction tD = (TermDisjunction) term;
-            return disjunction( normalizeDNF( tD.term1 ), normalizeDNF( tD.term2 ) );
-        }
-        if ( term instanceof TermConjunction ) {
-            TermConjunction tC = (TermConjunction) term;
-            if ( tC.term1 instanceof TermDisjunction ) {
-                TermDisjunction subtC = (TermDisjunction) tC.term1;
-                return disjunction( normalizeDNF( conjunction( subtC.term1, tC.term2 ) ), normalizeDNF( conjunction( subtC.term2, tC.term2 ) ) );
-            }
-            //if ( tC.term2 instanceof TermDisjunction ) {
-             //   TermDisjunction subtC = (TermDisjunction) tC.term2;
-               // return disjunction( normalizeDNF( conjunction( tC.term1, subtC.term1 ) ), normalizeDNF( conjunction( tC.term1, subtC.term2 ) ) );
-            //}
-            if ( tC.term1 instanceof TermConjunction ) {
-                TermConjunction subtC = (TermConjunction) tC.term1;
-                return normalizeDNF( conjunction( subtC.term1 , conjunction( subtC.term2, tC.term2 ) ) );
-            }
-            if ( tC.term1 instanceof TermConjunction ) {
-                TermConjunction subtC = (TermConjunction) tC.term1;
-                return normalizeDNF( conjunction( subtC.term1 , conjunction( subtC.term2, tC.term2 ) ) );
-            }
+    private HashSet<HashSet<AnswerTerm>> normalize( HashSet<HashSet<AnswerTerm>> set ) {
+        boolean checkAgain = true;
+        HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>( set );
+        HashSet<HashSet<AnswerTerm>> toRemove = new HashSet<>();
+        HashSet<HashSet<AnswerTerm>> toAdd = new HashSet<>();
 
+        while ( checkAgain ) {
+            checkAgain = false;
+            toRemove.clear();
+            toAdd.clear();
+            for ( HashSet<AnswerTerm> s : tempSet ) {
+                for ( AnswerTerm a : s ) {
+                    HashSet<AnswerTerm> temp = new HashSet<>( s );
+                    if ( a instanceof AnswerTermDisjunction ) {
+                        AnswerTermDisjunction tD = (AnswerTermDisjunction) a;
+                        toRemove.add( s );
+                        temp.remove( a );
+                        HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
+                        HashSet<AnswerTerm> temp2 = new HashSet<>( temp );
+                        temp1.add( tD.getAnswerTerm1() );
+                        temp2.add( tD.getAnswerTerm2() );
+                        toAdd.add( temp1 );
+                        toAdd.add( temp2 );
+                        checkAgain = true;
+                        break;
+                    } else if ( a instanceof AnswerTermConjunction ) {
+                        AnswerTermConjunction tC = (AnswerTermConjunction) a;
+                        toRemove.add( s );
+                        temp.remove( a );
+                        HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
+                        temp1.add( tC.getAnswerTerm1() );
+                        temp1.add( tC.getAnswerTerm2() );
+                        toAdd.add( temp1 );
+                        checkAgain = true;
+                        break;
+                    }
+                }
+            }
+            tempSet.removeAll( toRemove );
+            tempSet.addAll( toAdd );
         }
-        return term;
+        return tempSet;
     }
 
-    public Term normalizeKNF( Term term ) {
-        if ( term instanceof TermConjunction ) {
-            TermConjunction tD = (TermConjunction) term;
-            return conjunction( normalizeKNF( tD.term1 ), normalizeKNF( tD.term2 ) );
-        }
-        if ( term instanceof TermDisjunction ) {
-            TermDisjunction tC = (TermDisjunction) term;
-            if ( tC.term1 instanceof TermConjunction ) {
-                TermConjunction subtC = (TermConjunction) tC.term1;
-                return conjunction( normalizeKNF( disjunction( subtC.term1, tC.term2 ) ), normalizeKNF( disjunction( subtC.term2, tC.term2 ) ) );
+    public HashSet<HashSet<AnswerTerm>> normalizeCNF( HashSet<HashSet<AnswerTerm>> set ) {
+        boolean checkAgain = true;
+        HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>();
+        tempSet.addAll( set );
+        HashSet<HashSet<AnswerTerm>> toRemove = new HashSet<>();
+        HashSet<HashSet<AnswerTerm>> toAdd = new HashSet<>();
+
+        while ( checkAgain ) {
+            checkAgain = false;
+            toRemove.clear();
+            toAdd.clear();
+            for ( HashSet<AnswerTerm> s : tempSet ) {
+                for ( AnswerTerm a : s ) {
+                    HashSet<AnswerTerm> temp = new HashSet<>();
+                    temp.addAll( s );
+                    if ( a instanceof AnswerTermConjunction ) {
+                        AnswerTermConjunction tC = (AnswerTermConjunction) a;
+                        toRemove.add( s );
+                        temp.remove( a );
+                        HashSet<AnswerTerm> temp1 = new HashSet<>();
+                        HashSet<AnswerTerm> temp2 = new HashSet<>();
+                        temp1.addAll( temp );
+                        temp2.addAll( temp );
+                        temp1.add( tC.getAnswerTerm1() );
+                        temp2.add( tC.getAnswerTerm2() );
+                        toAdd.add( temp1 );
+                        toAdd.add( temp2 );
+                        checkAgain = true;
+                        break;
+                    } else if ( a instanceof AnswerTermDisjunction ) {
+                        AnswerTermDisjunction tD = (AnswerTermDisjunction) a;
+                        toRemove.add( s );
+                        temp.remove( a );
+                        HashSet<AnswerTerm> temp1 = new HashSet<>();
+                        temp1.addAll( temp );
+                        temp1.add( tD.getAnswerTerm1() );
+                        temp1.add( tD.getAnswerTerm2() );
+                        toAdd.add( temp1 );
+                        checkAgain = true;
+                        break;
+                    }
+                }
             }
-            if ( tC.term2 instanceof TermConjunction ) {
-                TermConjunction subtC = (TermConjunction) tC.term2;
-                return conjunction( normalizeKNF( disjunction( tC.term1, subtC.term1 ) ), normalizeKNF( disjunction( tC.term1, subtC.term2 ) ) );
-            }
+            tempSet.removeAll( toRemove );
+            tempSet.addAll( toAdd );
         }
-        return term;
+        return tempSet;
     }
 
-    private Term simplify( Term term ) {
-        if ( term instanceof TermConjunction ) {
-            TermConjunction tC = (TermConjunction) term;
-            if ( tC.term1 instanceof AnswerTerm && tC.term2 instanceof TermConjunction && ( (TermConjunction) tC.term2 ).term1 instanceof AnswerTerm ) {
-                return simplify( conjunction( conjunction( tC.term1, ( (TermConjunction) tC.term2 ).term1 ), ( (TermConjunction) tC.term2 ).term2 ) );
-            }
-            return conjunction( simplify( tC.term1 ), simplify( tC.term2 ) );
-        }
-        if ( term instanceof TermDisjunction ) {
-            TermDisjunction tD = (TermDisjunction) term;
-            if ( tD.term1 instanceof AnswerTerm && tD.term2 instanceof TermDisjunction && ( (TermDisjunction) tD.term2 ).term1 instanceof AnswerTerm ) {
-                return simplify( disjunction( disjunction( tD.term1, ( (TermDisjunction) tD.term2 ).term1 ), ( (TermDisjunction) tD.term2 ).term2 ) );
-            }
-            return disjunction( simplify( tD.term1 ), simplify( tD.term2 ) );
-        }
-        return term;
+    private AnswerTerm transformToAnswerTerms( HashSet<HashSet<AnswerTerm>> set ) {
+        HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>( set );
+
+        if ( tempSet.isEmpty() ) return null;
+
+        HashSet<AnswerTerm> s = tempSet.iterator().next();
+        HashSet<AnswerTerm> tempS = new HashSet<>( s );
+
+        if ( tempS.isEmpty() ) return null;
+
+        AnswerTerm term = tempS.iterator().next();
+        tempS.remove( term );
+        AnswerTerm temp = transformAnswerTermConjunctions( term, tempS );
+        tempSet.remove( s );
+
+        return transformAnswerTermDisjunctions( temp, tempSet );
     }
 
+    private AnswerTerm transformAnswerTermDisjunctions( AnswerTerm answerTerm, HashSet<HashSet<AnswerTerm>> set ) {
+        HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>( set );
+
+        if ( tempSet.isEmpty() ) return answerTerm;
+
+        HashSet<AnswerTerm> s = tempSet.iterator().next();
+        HashSet<AnswerTerm> tempS = new HashSet<>( s );
+
+        if ( tempS.isEmpty() ) return answerTerm;
+
+        AnswerTerm term = tempS.iterator().next();
+        tempS.remove( term );
+        AnswerTerm temp = transformAnswerTermConjunctions( term, tempS );
+        tempSet.remove( s );
+
+        return new AnswerTermDisjunction( answerTerm, transformAnswerTermDisjunctions( temp, tempSet ) );
+    }
+
+    private AnswerTerm transformAnswerTermConjunctions( AnswerTerm answerTerm, HashSet<AnswerTerm> set ) {
+        HashSet<AnswerTerm> tempSet = new HashSet<>( set );
+
+        if ( tempSet.isEmpty() ) return answerTerm;
+
+        AnswerTerm temp = tempSet.iterator().next();
+        tempSet.remove( temp );
+
+        return new AnswerTermConjunction( answerTerm, transformAnswerTermConjunctions( temp, tempSet ) );
+    }
 }

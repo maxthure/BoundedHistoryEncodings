@@ -1,4 +1,4 @@
-package computing;
+package answerTerms;
 
 public interface AnswerTerm {
 

@@ -16,4 +16,12 @@ public class WeakPrevious implements Query {
     public String toString() {
         return "WeakPrevious(" + subquery + ")";
     }
+
+    @Override
+    public boolean equals( Query query ) {
+        if(query instanceof WeakPrevious){
+            return ( this.subquery.equals( ((WeakPrevious) query).subquery ) );
+        }
+        return false;
+    }
 }

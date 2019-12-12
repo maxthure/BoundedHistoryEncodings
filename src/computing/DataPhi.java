@@ -3,17 +3,17 @@ package computing;
 import answerTerms.AnswerTerm;
 import queries.*;
 
-public class Phi {
+public class DataPhi {
 
     private int pointInTime;
     private Query query;
     private AnswerTerm answerTerm;
 
 
-    public Phi( int pointInTime, Query query ) {
+    public DataPhi( int pointInTime, Query query, AnswerTerm answerTerm ) {
         this.pointInTime = pointInTime;
         this.query = query;
-        answerTerm = new Function().compute( pointInTime, query );
+        this.answerTerm = answerTerm;
     }
 
     public int getPointInTime() {
@@ -33,17 +33,17 @@ public class Phi {
     }
 
     @Override
-    public boolean equals( Object obj ) {
-        if(obj instanceof Phi){
-            Phi phi = (Phi) obj;
-            return phi.pointInTime == this.pointInTime && phi.query.equals( this.query );
-        }
-        return super.equals( obj );
+    public int hashCode() {
+        return query.hashCode();
     }
 
     @Override
-    public int hashCode() {
-        return query.hashCode();
+    public boolean equals( Object obj ) {
+        if(obj instanceof DataPhi ){
+            DataPhi phi = (DataPhi) obj;
+            return phi.pointInTime == this.pointInTime && phi.query.equals( this.query );
+        }
+        return super.equals( obj );
     }
 
     @Override

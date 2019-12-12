@@ -20,6 +20,15 @@ public class Disjunction implements Query {
 
     @Override
     public String toString() {
-        return "(" + subquery1 + "u" + subquery2 + ")";
+        return "(" + subquery1 + " u " + subquery2 + ")";
+    }
+
+    @Override
+    public boolean equals( Query query ) {
+        if(query instanceof Disjunction){
+            Disjunction disjunction = (Disjunction) query;
+            return ( this.subquery1.equals( disjunction.subquery1 ) && this.subquery2.equals( disjunction.subquery2 ) ) || ( this.subquery1.equals( disjunction.subquery2 ) && this.subquery2.equals( disjunction.subquery1 ) );
+        }
+        return false;
     }
 }

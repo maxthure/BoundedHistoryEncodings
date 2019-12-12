@@ -22,4 +22,12 @@ public class Since implements Query {
     public String toString() {
         return "(" + subquery1 + " S " + subquery2 + ")";
     }
+
+    @Override
+    public boolean equals( Query query ) {
+        if(query instanceof Since){
+            return ( this.subquery1.equals( ((Since) query).subquery1 ) && this.subquery2.equals( ((Since) query).subquery2 ) );
+        }
+        return false;
+    }
 }

@@ -1,4 +1,4 @@
-package computing;
+package answerTerms;
 
 import queries.*;
 
@@ -25,6 +25,10 @@ public class AnswerSet implements AnswerTerm {
         }
     }
 
+    public String getAnswer() {
+        return answer;
+    }
+
     public Query getQuery() {
         return query;
     }
@@ -32,5 +36,19 @@ public class AnswerSet implements AnswerTerm {
     @Override
     public String toString() {
         return answer;
+    }
+
+    @Override
+    public int hashCode() {
+        return pointInTime;
+    }
+
+    @Override
+    public boolean equals( Object obj ) {
+        if(obj instanceof AnswerSet){
+            AnswerSet aSet = (AnswerSet) obj;
+            return this.query.equals( aSet.query );
+        }
+        return super.equals( obj );
     }
 }

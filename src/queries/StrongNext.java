@@ -16,4 +16,12 @@ public class StrongNext implements Query {
     public String toString() {
         return "StrongNext(" + subquery + ")";
     }
+
+    @Override
+    public boolean equals( Query query ) {
+        if(query instanceof StrongNext){
+            return ( this.subquery.equals( ((StrongNext) query).subquery ) );
+        }
+        return false;
+    }
 }

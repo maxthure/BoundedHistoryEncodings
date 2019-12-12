@@ -20,6 +20,15 @@ public class Conjunction implements Query {
 
     @Override
     public String toString() {
-        return "(" + subquery1 + "n" + subquery2 + ")";
+        return "(" + subquery1 + " n " + subquery2 + ")";
+    }
+
+    @Override
+    public boolean equals( Query query ) {
+        if(query instanceof Conjunction){
+            Conjunction conjunction = (Conjunction) query;
+            return ( this.subquery1.equals( conjunction.subquery1 ) && this.subquery2.equals( conjunction.subquery2 ) ) || ( this.subquery1.equals( conjunction.subquery2 ) && this.subquery2.equals( conjunction.subquery1 ) );
+        }
+        return false;
     }
 }

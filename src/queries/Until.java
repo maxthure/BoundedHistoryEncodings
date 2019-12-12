@@ -18,8 +18,18 @@ public class Until implements Query {
         return subquery2;
     }
 
+
+
     @Override
     public String toString() {
         return "(" + subquery1 + " U " + subquery2 + ")";
+    }
+
+    @Override
+    public boolean equals( Query query ) {
+        if(query instanceof Until){
+            return ( this.subquery1.equals( ((Until) query).subquery1 ) && this.subquery2.equals( ((Until) query).subquery2 ) );
+        }
+        return false;
     }
 }

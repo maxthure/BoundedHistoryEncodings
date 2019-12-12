@@ -12,8 +12,20 @@ public class AtemporalQuery implements Query {
         return name;
     }
 
+    public boolean equals( AtemporalQuery atemporalQuery ) {
+        return this.name.equals( atemporalQuery.name );
+    }
+
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public boolean equals( Query query ) {
+        if(query instanceof AtemporalQuery){
+            return ( this.name.equals( ((AtemporalQuery) query).name ) );
+        }
+        return false;
     }
 }

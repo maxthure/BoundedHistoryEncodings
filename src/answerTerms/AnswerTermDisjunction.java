@@ -1,4 +1,4 @@
-package computing;
+package answerTerms;
 
 public class AnswerTermDisjunction implements AnswerTerm {
 
@@ -21,7 +21,8 @@ public class AnswerTermDisjunction implements AnswerTerm {
 
     @Override
     public String toString() {
-        //return "(" + answerTerm1.toString() + "\u001B[32m" + " u " + "\u001B[0m" + answerTerm2.toString() + ")";
-        return "(" + answerTerm1.toString() + " u " + answerTerm2.toString() + ")";
+        return "(" + answerTerm1.toString() + "\u001B[32m" + " u " + "\u001B[0m" + answerTerm2.toString() + ")";
+        //return "(" + answerTerm1.toString() + " u " + answerTerm2.toString() + ")";
     }
+
 }
