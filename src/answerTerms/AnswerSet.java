@@ -12,9 +12,9 @@ public class AnswerSet implements AnswerTerm {
         this.query = query;
         this.pointInTime = pointInTime;
         if ( query instanceof AtemporalQuery ) {
-            answer = ( (AtemporalQuery) query ).getName(); //.toUpperCase();
+            answer = ( (AtemporalQuery) query ).getName();
             if(pointInTime >= 0){
-                answer = answer+pointInTime;
+                answer = answer;
             }
         } else if ( query instanceof StrongPrevious ) {
             answer = "empty set";

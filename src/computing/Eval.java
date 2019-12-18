@@ -3,6 +3,7 @@ package computing;
 import answerTerms.AnswerTerm;
 import answerTerms.AnswerTermConjunction;
 import answerTerms.AnswerTermDisjunction;
+import answerTerms.Variable;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,17 +13,17 @@ import java.sql.Statement;
 public class Eval {
 
     public void eval( AnswerTerm answerTerm ) {
-
+        if ( answerTerm == null ) return;
         try {
             Class.forName( "org.sqlite.JDBC" );
             Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
             String sqlQuery = prepareQuery( answerTerm );
-            System.out.println( sqlQuery );
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery( sqlQuery );
             while ( rs.next() ) {
-                String columnID = rs.getString( "column_1" );
-                System.out.println( columnID );
+                String column_1 = rs.getString( "column_1" );
+                String column_2 = rs.getString( "column_2" );
+                System.out.println( column_1 +"\t"+ column_2);
             }
             st.close();
 
@@ -32,6 +33,9 @@ public class Eval {
     }
 
     public String prepareQuery( AnswerTerm answerTerm ) {
+        if(answerTerm instanceof Variable ){
+            throw new IllegalArgumentException( answerTerm.toString() );
+        }
         StringBuilder stringBuilder = new StringBuilder();
         if ( answerTerm instanceof AnswerTermDisjunction ) {
             AnswerTermDisjunction answerTermDisjunction = (AnswerTermDisjunction) answerTerm;
@@ -53,4 +57,5 @@ public class Eval {
             return answerTerm.toString();
         }
     }
+
 }

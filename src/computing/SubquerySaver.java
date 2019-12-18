@@ -11,8 +11,7 @@ public class SubquerySaver {
     private FunctionPhi functionPhi = new FunctionPhi( this );
 
     public void saveSubqueries( DataPhi phi ) {
-        //TODO
-        //savedSubqueries.add( phi );
+        savedSubqueries.add( phi );
         saveSubqueries( phi.getQuery(), phi.getPointInTime() );
     }
 

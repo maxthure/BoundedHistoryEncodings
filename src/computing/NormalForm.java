@@ -3,6 +3,7 @@ package computing;
 import answerTerms.AnswerTerm;
 import answerTerms.AnswerTermConjunction;
 import answerTerms.AnswerTermDisjunction;
+import answerTerms.Variable;
 
 import java.util.HashSet;
 
@@ -36,6 +37,17 @@ public class NormalForm {
                         temp.remove( a );
                         HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
                         HashSet<AnswerTerm> temp2 = new HashSet<>( temp );
+                        //TODO Der Variablen Teil hier ist an der falschen Stelle, da die Variablen nur bei eval der leeren Menge gleichzusetzen sind
+                        if ( tD.getAnswerTerm1().toString().equals( "empty set" ) || tD.getAnswerTerm1() instanceof Variable ) {
+                            temp2.add( tD.getAnswerTerm2() );
+                            toAdd.add( temp2 );
+                            break;
+                        }
+                        if ( tD.getAnswerTerm2().toString().equals( "empty set" ) || tD.getAnswerTerm2() instanceof Variable ) {
+                            temp1.add( tD.getAnswerTerm1() );
+                            toAdd.add( temp1 );
+                            break;
+                        }
                         temp1.add( tD.getAnswerTerm1() );
                         temp2.add( tD.getAnswerTerm2() );
                         toAdd.add( temp1 );
@@ -47,6 +59,10 @@ public class NormalForm {
                         toRemove.add( s );
                         temp.remove( a );
                         HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
+                        //TODO Der Variablen Teil hier ist an der falschen Stelle, da die Variablen nur bei eval der leeren Menge gleichzusetzen sind
+                        if ( tC.getAnswerTerm1().toString().equals( "empty set" ) || tC.getAnswerTerm2().toString().equals( "empty set" ) || tC.getAnswerTerm1() instanceof Variable || tC.getAnswerTerm2() instanceof Variable ) {
+                            break;
+                        }
                         temp1.add( tC.getAnswerTerm1() );
                         temp1.add( tC.getAnswerTerm2() );
                         toAdd.add( temp1 );
