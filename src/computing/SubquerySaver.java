@@ -1,6 +1,7 @@
 package computing;
 
-import answerTerms.AnswerTerm;
+import results.AnswerTerm;
+import results.DataPhi;
 import queries.*;
 
 import java.util.HashSet;
@@ -11,7 +12,6 @@ public class SubquerySaver {
     private FunctionPhi functionPhi = new FunctionPhi( this );
 
     public void saveSubqueries( DataPhi phi ) {
-        savedSubqueries.add( phi );
         saveSubqueries( phi.getQuery(), phi.getPointInTime() );
     }
 

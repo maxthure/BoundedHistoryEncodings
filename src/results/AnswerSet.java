@@ -1,4 +1,4 @@
-package answerTerms;
+package results;
 
 import queries.*;
 

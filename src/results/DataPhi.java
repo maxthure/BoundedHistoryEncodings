@@ -1,6 +1,5 @@
-package computing;
+package results;
 
-import answerTerms.AnswerTerm;
 import queries.*;
 
 public class DataPhi {

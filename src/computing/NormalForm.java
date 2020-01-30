@@ -1,10 +1,11 @@
 package computing;
 
-import answerTerms.AnswerTerm;
-import answerTerms.AnswerTermConjunction;
-import answerTerms.AnswerTermDisjunction;
-import answerTerms.Variable;
+import results.AnswerTerm;
+import results.AnswerTermConjunction;
+import results.AnswerTermDisjunction;
+import results.Variable;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class NormalForm {
@@ -15,6 +16,7 @@ public class NormalForm {
         temp.add( answerTerm );
         set.add( temp );
         HashSet<HashSet<AnswerTerm>> tem = normalize( set );
+        mapVars( tem );
         return transformToAnswerTerms( tem );
     }
 
@@ -37,13 +39,12 @@ public class NormalForm {
                         temp.remove( a );
                         HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
                         HashSet<AnswerTerm> temp2 = new HashSet<>( temp );
-                        //TODO Der Variablen Teil hier ist an der falschen Stelle, da die Variablen nur bei eval der leeren Menge gleichzusetzen sind
-                        if ( tD.getAnswerTerm1().toString().equals( "empty set" ) || tD.getAnswerTerm1() instanceof Variable ) {
+                        if ( tD.getAnswerTerm1().toString().equals( "empty set" ) ) {
                             temp2.add( tD.getAnswerTerm2() );
                             toAdd.add( temp2 );
                             break;
                         }
-                        if ( tD.getAnswerTerm2().toString().equals( "empty set" ) || tD.getAnswerTerm2() instanceof Variable ) {
+                        if ( tD.getAnswerTerm2().toString().equals( "empty set" ) ) {
                             temp1.add( tD.getAnswerTerm1() );
                             toAdd.add( temp1 );
                             break;
@@ -59,8 +60,7 @@ public class NormalForm {
                         toRemove.add( s );
                         temp.remove( a );
                         HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
-                        //TODO Der Variablen Teil hier ist an der falschen Stelle, da die Variablen nur bei eval der leeren Menge gleichzusetzen sind
-                        if ( tC.getAnswerTerm1().toString().equals( "empty set" ) || tC.getAnswerTerm2().toString().equals( "empty set" ) || tC.getAnswerTerm1() instanceof Variable || tC.getAnswerTerm2() instanceof Variable ) {
+                        if ( tC.getAnswerTerm1().toString().equals( "empty set" ) || tC.getAnswerTerm2().toString().equals( "empty set" ) ) {
                             break;
                         }
                         temp1.add( tC.getAnswerTerm1() );
@@ -171,5 +171,26 @@ public class NormalForm {
         tempSet.remove( temp );
 
         return new AnswerTermConjunction( answerTerm, transformAnswerTermConjunctions( temp, tempSet ) );
+    }
+
+    private void mapVars( HashSet<HashSet<AnswerTerm>> set ) {
+        HashMap<HashSet<AnswerTerm>, HashSet<AnswerTerm>> mappedVars = new HashMap<>();
+        for ( HashSet<AnswerTerm> terms : set ) {
+            HashSet<AnswerTerm> vars = new HashSet<>();
+            HashSet<AnswerTerm> oths = new HashSet<>();
+            for ( AnswerTerm term : terms ) {
+                if ( term instanceof Variable ) {
+                    vars.add( term );
+                } else {
+                    oths.add( term );
+                }
+            }
+            if ( mappedVars.containsKey( vars ) ) {
+                mappedVars.get( vars ).addAll( oths );
+            } else {
+                mappedVars.put( vars, oths );
+            }
+        }
+        System.out.println( mappedVars );
     }
 }

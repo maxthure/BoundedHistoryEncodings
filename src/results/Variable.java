@@ -1,6 +1,5 @@
-package answerTerms;
+package results;
 
-import answerTerms.AnswerTerm;
 import queries.Query;
 
 public class Variable implements AnswerTerm {

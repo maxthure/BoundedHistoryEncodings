@@ -1,13 +1,12 @@
 package computing;
 
-import answerTerms.*;
+import results.*;
 import queries.*;
-
-import java.security.PublicKey;
 
 public class FunctionPhi {
 
-    SubquerySaver subquerySaver;
+    private SubquerySaver subquerySaver;
+    private NormalForm normalForm = new NormalForm();
     int pointInTime = 0;
 
     public FunctionPhi( SubquerySaver subquerySaver ) {
@@ -17,11 +16,11 @@ public class FunctionPhi {
     public DataPhi compute( int pointInTime, Query query ) {
         if ( pointInTime == 0 ) {
             AnswerTerm answerTerm = phiZero( query );
-            return new DataPhi( pointInTime, query, answerTerm );
+            return new DataPhi( pointInTime, query, normalForm.prepare( answerTerm ) );
         } else {
             this.pointInTime = pointInTime;
             AnswerTerm answerTerm = replaceVariables( pointInTime, phiI( pointInTime, query ) );
-            return new DataPhi( pointInTime, query, answerTerm );
+            return new DataPhi( pointInTime, query, normalForm.prepare( answerTerm ) );
         }
     }
 
@@ -122,38 +121,10 @@ public class FunctionPhi {
 
 
     AnswerTerm conjunction( AnswerTerm answerTerm1, AnswerTerm answerTerm2 ) {
-        /*if ( answerTerm1.toString().equals( answerTerm2.toString() ) ) {
-            return answerTerm1;
-        }
-        if ( answerTerm1 instanceof AnswerSet && answerTerm2 instanceof AnswerSet ) {
-            AnswerSet aT1 = (AnswerSet) answerTerm1;
-            AnswerSet aT2 = (AnswerSet) answerTerm2;
-            if ( aT1.getAnswer().contains( aT2.getAnswer() ) ) {
-                return new AnswerSet( new AtemporalQuery( aT1.getAnswer() ), -1 );
-            }
-            if ( aT2.getAnswer().contains( aT1.getAnswer() ) ) {
-                return new AnswerSet( new AtemporalQuery( aT2.getAnswer() ), -1 );
-            }
-            return new AnswerSet( new AtemporalQuery( "(" + aT1.getAnswer() + " n " + aT2.getAnswer() + ")" ), -1 );
-        }*/
         return new AnswerTermConjunction( answerTerm1, answerTerm2 );
     }
 
     AnswerTerm disjunction( AnswerTerm answerTerm1, AnswerTerm answerTerm2 ) {
-        /*if ( answerTerm1.toString().equals( answerTerm2.toString() ) ) {
-            return answerTerm1;
-        }
-        if ( answerTerm1 instanceof AnswerSet && answerTerm2 instanceof AnswerSet ) {
-            AnswerSet aT1 = (AnswerSet) answerTerm1;
-            AnswerSet aT2 = (AnswerSet) answerTerm2;
-            if ( aT1.getAnswer().contains( aT2.getAnswer() ) ) {
-                return new AnswerSet( new AtemporalQuery( aT1.getAnswer() ), -1 );
-            }
-            if ( aT2.getAnswer().contains( aT1.getAnswer() ) ) {
-                return new AnswerSet( new AtemporalQuery( aT2.getAnswer() ), -1 );
-            }
-            return new AnswerSet( new AtemporalQuery( "(" + aT1.getAnswer() + " u " + aT2.getAnswer() + ")" ), -1 );
-        }*/
         return new AnswerTermDisjunction( answerTerm1, answerTerm2 );
     }
 

@@ -1,4 +1,4 @@
-package answerTerms;
+package results;
 
 public class AnswerTermConjunction implements AnswerTerm {
 
