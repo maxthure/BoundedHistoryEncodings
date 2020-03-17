@@ -21,7 +21,7 @@ public class Main {
         //Query query = new Since( new AtemporalQuery( "a" ), new StrongNext( new AtemporalQuery( "b" ) ) );
         //Query query = new Conjunction( new StrongPrevious( new StrongPrevious( new AtemporalQuery( "SELECT * FROM table1" ) ) ), new Since( new AtemporalQuery( "SELECT * FROM table1" ), new StrongNext( new AtemporalQuery( "SELECT * FROM table2" ) ) ) );
         //Query query = new Disjunction( new Disjunction( new AtemporalQuery( "SELECT * FROM Table1" ), new StrongPrevious( new AtemporalQuery( "SELECT * FROM Table2" ) ) ), new Conjunction( new AtemporalQuery( "SELECT * FROM Table1" ), new AtemporalQuery( "SELECT * FROM Table2" ) ) );
-        Query query = new Conjunction( new AtemporalQuery( "SELECT * FROM Table2" ), new StrongPrevious( new Until( new StrongPrevious( new AtemporalQuery( "SELECT * FROM Table1" ) ), new AtemporalQuery( "SELECT * FROM Table2" ) ) ) );
+        Query query = new Conjunction( new AtemporalQuery( "SELECT * FROM Table1" ), new StrongPrevious( new Until( new StrongPrevious( new AtemporalQuery( "SELECT * FROM Table2" ) ), new AtemporalQuery( "SELECT * FROM Table3" ) ) ) );
 
         //Query query = new Since( new AtemporalQuery( "SELECT * FROM Table1" ), new StrongNext( new Conjunction( new AtemporalQuery( "SELECT * FROM Table2" ), new StrongNext( new StrongNext( new AtemporalQuery( "SELECT * FROM Table3" ) ) ) ) ) );
 
@@ -42,7 +42,8 @@ public class Main {
              */
             DataNF result = phi.getDataNF();
             // TODO println entfernen
-            System.out.println( phi.getDataNF() );
+            System.out.println( "AT: " + phi.getAnswerTerm() );
+            System.out.println( "DataNF: " + phi.getDataNF() );
             //eval.eval( result );
         }
         for ( DataPhi phi : subquerySaver.getSavedSubqueries() ) {

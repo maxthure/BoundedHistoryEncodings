@@ -16,10 +16,10 @@ public class DataPhi {
     private int pointInTime;
     private Query query;
     private DataNF dataNF;
-    /*
-    For a version that includes the AnswerTerm in DataPhi:
+
+    //For a version that includes the AnswerTerm in DataPhi:
     private AnswerTerm answerTerm;
-    */
+
 
     public DataPhi( int pointInTime, Query query, DataNF dataNF ) {
         this.pointInTime = pointInTime;
@@ -27,8 +27,8 @@ public class DataPhi {
         this.dataNF = dataNF;
     }
 
-    /*
-    For a version that includes the AnswerTerm in DataPhi:
+
+    //For a version that includes the AnswerTerm in DataPhi:
 
     public DataPhi( int pointInTime, Query query, AnswerTerm answerTerm, DataNF dataNF ) {
         this.pointInTime = pointInTime;
@@ -36,7 +36,7 @@ public class DataPhi {
         this.answerTerm = answerTerm;
         this.dataNF = dataNF;
     }
-    */
+
 
     public int getPointInTime() {
         return pointInTime;
@@ -46,17 +46,13 @@ public class DataPhi {
         return query;
     }
 
-    /*
-    For a version that includes the AnswerTerm in DataPhi:
 
-    public void setAnswerTerm( AnswerTerm answerTerm ) {
-        this.answerTerm = answerTerm;
-    }
+    //For a version that includes the AnswerTerm in DataPhi:
 
     public AnswerTerm getAnswerTerm() {
         return answerTerm;
     }
-    */
+
 
     public DataNF getDataNF() {
         return dataNF;

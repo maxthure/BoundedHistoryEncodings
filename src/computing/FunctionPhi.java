@@ -34,21 +34,21 @@ public class FunctionPhi {
     public DataPhi compute( int pointInTime, Query query ) {
         if ( pointInTime == 0 ) {
             AnswerTerm answerTerm = phiZero( query );
-            return new DataPhi( pointInTime, query, normalForm.prepareNF( answerTerm ) );
-            /*
-            For a version that includes the AnswerTerm in DataPhi:
+            //return new DataPhi( pointInTime, query, normalForm.prepareNF( answerTerm ) );
+
+            //For a version that includes the AnswerTerm in DataPhi:
 
             return new DataPhi( pointInTime, query, normalForm.prepare( answerTerm ), normalForm.prepareNF( answerTerm ) );
-             */
+
         } else {
             this.pointInTime = pointInTime;
             AnswerTerm answerTerm = replaceVariables( pointInTime, phiI( pointInTime, query ) );
-            return new DataPhi( pointInTime, query, normalForm.prepareNF( answerTerm ) );
-            /*
-            For a version that includes the AnswerTerm in DataPhi:
+            //return new DataPhi( pointInTime, query, normalForm.prepareNF( answerTerm ) );
+
+            //For a version that includes the AnswerTerm in DataPhi:
 
             return new DataPhi( pointInTime, query, normalForm.prepare( answerTerm ), normalForm.prepareNF( answerTerm ) );
-             */
+
         }
     }
 

@@ -6,18 +6,18 @@ import java.util.HashSet;
 
 public class NormalForm {
 
-    /*
-    For a version that includes the AnswerTerm in DataPhi:
+
+    // For a version that includes the AnswerTerm in DataPhi:
 
     public AnswerTerm prepare( AnswerTerm answerTerm ) {
-       HashSet<HashSet<AnswerTerm>> set = new HashSet<>();
-       HashSet<AnswerTerm> temp = new HashSet<>();
-       temp.add( answerTerm );
-       set.add( temp );
-       HashSet<HashSet<AnswerTerm>> tem = normalize( set );
-       return transformToAnswerTerms( tem );
+        HashSet<HashSet<AnswerTerm>> set = new HashSet<>();
+        HashSet<AnswerTerm> temp = new HashSet<>();
+        temp.add( answerTerm );
+        set.add( temp );
+        HashSet<HashSet<AnswerTerm>> tem = normalize( set );
+        return transformToAnswerTerms( tem );
     }
-    */
+
 
     /**
      * This method converts the given answer term into an answer term in {@link DataNF}
@@ -145,18 +145,17 @@ public class NormalForm {
 */
 
 
-    /*
-        For a version that includes the AnswerTerm in DataPhi:
+    // For a version that includes the AnswerTerm in DataPhi:
 
-        /**
-         * This method turns the sets resembling a DNF into {@code AnswerTerm}s in DNF.
-         * This is necessary because the set can take an arbitrary amount of arguments for both disjunction and conjunction
-         * (remember that those are only implicit distinguished [[x,y],[x,y,...],...]) but {@link AnswerTerm}s can only
-         * take two arguments => [[[(x n y) u (x n (y n ...))] u [(x n (y n ...)) u (x n (y n ...))]] u ... ]
-         *
-         * @param set A set of sets resembling a DNF
-         * @return An {@code AnswerTerm} in DNF
-         *
+    /**
+     * This method turns the sets resembling a DNF into {@code AnswerTerm}s in DNF.
+     * This is necessary because the set can take an arbitrary amount of arguments for both disjunction and conjunction
+     * (remember that those are only implicit distinguished [[x,y],[x,y,...],...]) but {@link AnswerTerm}s can only
+     * take two arguments => [[[(x n y) u (x n (y n ...))] u [(x n (y n ...)) u (x n (y n ...))]] u ... ]
+     *
+     * @param set A set of sets resembling a DNF
+     * @return An {@code AnswerTerm} in DNF
+     */
     private AnswerTerm transformToAnswerTerms( HashSet<HashSet<AnswerTerm>> set ) {
         HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>( set );
 
@@ -203,7 +202,7 @@ public class NormalForm {
 
         return new AnswerTermConjunction( answerTerm, transformAnswerTermConjunctions( temp, tempSet ) );
     }
-*/
+
 
     /**
      * This method turns the sets resembling a DNF into {@link DataNF}
