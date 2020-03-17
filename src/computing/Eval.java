@@ -1,36 +1,44 @@
 package computing;
 
-import results.AnswerTerm;
-import results.AnswerTermConjunction;
-import results.AnswerTermDisjunction;
-import results.Variable;
+import results.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashSet;
 
 /**
- * This class is supposed to evaluate a given answer term. The way this class has to work at the end is dependent on
+ * This class is supposed to evaluate a given DataNF. The way this class has to work at the end is dependent on
  * the input in the first instance and the way the given answer term is constructed.
  */
 public class Eval {
 
-    public void eval( AnswerTerm answerTerm ) {
-        if ( answerTerm == null ) return;
-        try {
+    public void eval( DataNF answerTermNF ) {
+        if ( answerTermNF == null ) return;
+        for ( HashSet<Variable> vars : answerTermNF.keySet() ) {
+            queryDB( answerTermNF.get( vars ) );
+        }
+    }
+
+    private void queryDB( HashSet<HashSet<AnswerTerm>> answerTermNF ) {
+        prepareQuery( answerTermNF );
+
+        /*try {
             Class.forName( "org.sqlite.JDBC" );
             Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
-            String sqlQuery = prepareQuery( answerTerm );
+            String sqlQuery = prepareQuery( answerTermNF );
             if ( sqlQuery.isEmpty() ) {
                 return;
             }
+            // TODO println entfernen
             //System.out.println( sqlQuery );
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery( sqlQuery );
             while ( rs.next() ) {
                 String column_1 = rs.getString( "column_1" );
                 String column_2 = rs.getString( "column_2" );
+                // TODO println entfernen
                 //System.out.println( column_1 + "\t" + column_2 );
             }
             st.close();
@@ -38,9 +46,34 @@ public class Eval {
         } catch ( Exception e ) {
             e.printStackTrace();
         }
+
+         */
     }
 
-    public String prepareQuery( AnswerTerm answerTerm ) {
+
+    public void prepareQuery( HashSet<HashSet<AnswerTerm>> answerTerms ) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for ( HashSet<AnswerTerm> terms : answerTerms ) {
+            boolean first = true;
+            for ( AnswerTerm term : terms ) {
+                if ( !(term instanceof AnswerSet) ) {
+                    throw new IllegalArgumentException(  );
+                }
+                AnswerSet set = (AnswerSet) term;
+                if(first){
+                    first = false;
+                    stringBuilder.append( set.getAnswer() );
+                } else {
+                    stringBuilder.append( " NATURAL JOIN (" );
+                    stringBuilder.append( set.getAnswer() );
+                    stringBuilder.append( ")" );
+                }
+            }
+        }
+
+        System.out.println( stringBuilder.toString() );
+
+/*
         if ( answerTerm instanceof Variable ) {
             return "";
             //throw new IllegalArgumentException( answerTerm.toString() );
@@ -107,6 +140,7 @@ public class Eval {
         } else {
             return answerTerm.toString();
         }
+ */
     }
 
 }
