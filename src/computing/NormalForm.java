@@ -6,21 +6,18 @@ import java.util.HashSet;
 
 public class NormalForm {
 
+    /*
+    For a version that includes the AnswerTerm in DataPhi:
 
-    /**
-     * This method converts the given answer term into an answer term in DNF (CNF possible).
-     *
-     * @param answerTerm The {@link AnswerTerm} that is to be transformed in NF
-     * @return Answer term in DNF
-     */
     public AnswerTerm prepare( AnswerTerm answerTerm ) {
-        HashSet<HashSet<AnswerTerm>> set = new HashSet<>();
-        HashSet<AnswerTerm> temp = new HashSet<>();
-        temp.add( answerTerm );
-        set.add( temp );
-        HashSet<HashSet<AnswerTerm>> tem = normalize( set );
-        return transformToAnswerTerms( tem );
+       HashSet<HashSet<AnswerTerm>> set = new HashSet<>();
+       HashSet<AnswerTerm> temp = new HashSet<>();
+       temp.add( answerTerm );
+       set.add( temp );
+       HashSet<HashSet<AnswerTerm>> tem = normalize( set );
+       return transformToAnswerTerms( tem );
     }
+    */
 
     /**
      * This method converts the given answer term into an answer term in {@link DataNF}
@@ -146,6 +143,7 @@ public class NormalForm {
         return tempSet;
     }
 */
+
     /**
      * This method turns the sets resembling a DNF into {@code AnswerTerm}s in DNF.
      * This is necessary because the set can take an arbitrary amount of arguments for both disjunction and conjunction

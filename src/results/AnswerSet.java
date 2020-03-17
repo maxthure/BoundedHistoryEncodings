@@ -45,7 +45,7 @@ public class AnswerSet implements AnswerTerm {
 
     @Override
     public boolean equals( Object obj ) {
-        if(obj instanceof AnswerSet){
+        if ( obj instanceof AnswerSet ) {
             AnswerSet aSet = (AnswerSet) obj;
             return this.query.equals( aSet.query );
         }

@@ -36,7 +36,7 @@ public class Variable implements AnswerTerm {
 
     @Override
     public boolean equals( Object obj ) {
-        if(obj instanceof Variable){
+        if ( obj instanceof Variable ) {
             Variable var = (Variable) obj;
             return this.query.equals( var.query );
         }

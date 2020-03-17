@@ -31,10 +31,10 @@ public class Main {
          */
         for ( int i = 0; i < 5; i++ ) {
             DataPhi phi = functionPhi.compute( i, query );
-            //TODO Bis hier sollte alles korrekt sein
             subquerySaver.saveSubqueries( phi );
+            //TODO Bis hier sollte alles korrekt sein
             //System.out.println( phi );
-            AnswerTerm result = phi.getAnswerTerm();
+            AnswerTerm result = phi.getDataNF();
             //System.out.println( "Result: " +result );
             //eval.eval( result );
         }

@@ -26,8 +26,8 @@ public class AtemporalQuery implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if(query instanceof AtemporalQuery){
-            return ( this.name.equals( ((AtemporalQuery) query).name ) );
+        if ( query instanceof AtemporalQuery ) {
+            return ( this.name.equals( ( (AtemporalQuery) query ).name ) );
         }
         return false;
     }

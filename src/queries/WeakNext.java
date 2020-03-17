@@ -22,8 +22,8 @@ public class WeakNext implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if(query instanceof WeakNext){
-            return ( this.subquery.equals( ((WeakNext) query).subquery ) );
+        if ( query instanceof WeakNext ) {
+            return ( this.subquery.equals( ( (WeakNext) query ).subquery ) );
         }
         return false;
     }

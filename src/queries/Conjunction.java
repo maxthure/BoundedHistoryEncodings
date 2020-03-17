@@ -28,7 +28,7 @@ public class Conjunction implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if(query instanceof Conjunction){
+        if ( query instanceof Conjunction ) {
             Conjunction conjunction = (Conjunction) query;
             return ( this.subquery1.equals( conjunction.subquery1 ) && this.subquery2.equals( conjunction.subquery2 ) ) || ( this.subquery1.equals( conjunction.subquery2 ) && this.subquery2.equals( conjunction.subquery1 ) );
         }

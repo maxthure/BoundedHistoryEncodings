@@ -15,8 +15,20 @@ public class DataPhi {
 
     private int pointInTime;
     private Query query;
-    private AnswerTerm answerTerm;
     private DataNF dataNF;
+    /*
+    For a version that includes the AnswerTerm in DataPhi:
+    private AnswerTerm answerTerm;
+    */
+
+    public DataPhi( int pointInTime, Query query, DataNF dataNF ) {
+        this.pointInTime = pointInTime;
+        this.query = query;
+        this.dataNF = dataNF;
+    }
+
+    /*
+    For a version that includes the AnswerTerm in DataPhi:
 
     public DataPhi( int pointInTime, Query query, AnswerTerm answerTerm, DataNF dataNF ) {
         this.pointInTime = pointInTime;
@@ -24,6 +36,7 @@ public class DataPhi {
         this.answerTerm = answerTerm;
         this.dataNF = dataNF;
     }
+    */
 
     public int getPointInTime() {
         return pointInTime;
@@ -33,6 +46,9 @@ public class DataPhi {
         return query;
     }
 
+    /*
+    For a version that includes the AnswerTerm in DataPhi:
+
     public void setAnswerTerm( AnswerTerm answerTerm ) {
         this.answerTerm = answerTerm;
     }
@@ -40,6 +56,7 @@ public class DataPhi {
     public AnswerTerm getAnswerTerm() {
         return answerTerm;
     }
+    */
 
     public DataNF getDataNF() {
         return dataNF;
@@ -52,7 +69,7 @@ public class DataPhi {
 
     @Override
     public boolean equals( Object obj ) {
-        if(obj instanceof DataPhi ){
+        if ( obj instanceof DataPhi ) {
             DataPhi phi = (DataPhi) obj;
             return phi.pointInTime == this.pointInTime && phi.query.equals( this.query );
         }
@@ -61,7 +78,7 @@ public class DataPhi {
 
     @Override
     public String toString() {
-        return pointInTime + ": " + query + " = " + answerTerm;
+        return pointInTime + ": " + query + " = " + dataNF;
     }
 
 }

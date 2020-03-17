@@ -28,7 +28,7 @@ public class Disjunction implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if(query instanceof Disjunction){
+        if ( query instanceof Disjunction ) {
             Disjunction disjunction = (Disjunction) query;
             return ( this.subquery1.equals( disjunction.subquery1 ) && this.subquery2.equals( disjunction.subquery2 ) ) || ( this.subquery1.equals( disjunction.subquery2 ) && this.subquery2.equals( disjunction.subquery1 ) );
         }

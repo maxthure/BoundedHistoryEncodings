@@ -8,7 +8,7 @@ public class Until implements Query {
     private final Query subquery1;
     private final Query subquery2;
 
-    public Until(Query subquery1, Query subquery2){
+    public Until( Query subquery1, Query subquery2 ) {
         this.subquery1 = subquery1;
         this.subquery2 = subquery2;
     }
@@ -22,7 +22,6 @@ public class Until implements Query {
     }
 
 
-
     @Override
     public String toString() {
         return "(" + subquery1 + " U " + subquery2 + ")";
@@ -30,8 +29,8 @@ public class Until implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if(query instanceof Until){
-            return ( this.subquery1.equals( ((Until) query).subquery1 ) && this.subquery2.equals( ((Until) query).subquery2 ) );
+        if ( query instanceof Until ) {
+            return ( this.subquery1.equals( ( (Until) query ).subquery1 ) && this.subquery2.equals( ( (Until) query ).subquery2 ) );
         }
         return false;
     }
