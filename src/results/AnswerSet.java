@@ -3,7 +3,7 @@ package results;
 import queries.*;
 
 /**
- * This class represents an answer set in an answer term.
+ * This class represents a set of answers in an answer term.
  */
 public class AnswerSet implements AnswerTerm {
 
@@ -16,9 +16,6 @@ public class AnswerSet implements AnswerTerm {
         this.pointInTime = pointInTime;
         if ( query instanceof AtemporalQuery ) {
             answer = ( (AtemporalQuery) query ).getName();
-            if(pointInTime >= 0){
-                answer = answer;
-            }
         } else if ( query instanceof StrongPrevious ) {
             answer = "empty set";
         } else if ( query instanceof WeakPrevious ) {

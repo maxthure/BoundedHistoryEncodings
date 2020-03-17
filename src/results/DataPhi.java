@@ -5,6 +5,11 @@ import queries.*;
 
 /**
  * This class represents an answer to a given query at a specific point in time.
+ * It contains:
+ * <li>the time in point
+ * <li>the actual {@link Query}
+ * <li>the {@link AnswerTerm} in DNF
+ * <li>the {@code AnswerTerm} in {@link DataNF}
  */
 public class DataPhi {
 

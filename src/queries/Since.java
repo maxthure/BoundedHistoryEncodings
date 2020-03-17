@@ -5,8 +5,8 @@ package queries;
  */
 public class Since implements Query {
 
-    private Query subquery1;
-    private Query subquery2;
+    private final Query subquery1;
+    private final Query subquery2;
 
     public Since( Query subquery1, Query subquery2 ) {
         this.subquery1 = subquery1;

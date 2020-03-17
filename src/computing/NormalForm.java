@@ -2,17 +2,16 @@ package computing;
 
 import results.*;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class NormalForm {
 
 
     /**
-     * This method converts the given answer term into an answer term in DNF (CNF possible)
+     * This method converts the given answer term into an answer term in DNF (CNF possible).
      *
-     * @param answerTerm
-     * @return answer term in DNF
+     * @param answerTerm The {@link AnswerTerm} that is to be transformed in NF
+     * @return Answer term in DNF
      */
     public AnswerTerm prepare( AnswerTerm answerTerm ) {
         HashSet<HashSet<AnswerTerm>> set = new HashSet<>();
@@ -26,8 +25,8 @@ public class NormalForm {
     /**
      * This method converts the given answer term into an answer term in {@link DataNF}
      *
-     * @param answerTerm
-     * @return answer term in {@link DataNF}
+     * @param answerTerm The {@link AnswerTerm} that is to be transformed in NF
+     * @return Answer term in {@code DataNF}
      */
     public DataNF prepareNF( AnswerTerm answerTerm ) {
         HashSet<HashSet<AnswerTerm>> set = new HashSet<>();
@@ -39,12 +38,12 @@ public class NormalForm {
     }
 
     /**
-     * Turns a set containing an answer term into sets resembling a DNF.
-     * Because I could not think of a way to transform the AnswerTerms with binary operators, I chose to use Sets that
-     * resemble the disjunctions and conjunctions (same for normalizeCNF).
+     * Turns a set containing an {@link AnswerTerm} into sets resembling a DNF.
+     * Because I could not think of a way to transform the {@code AnswerTerm}s with binary operators, I chose to use
+     * sets that resemble the disjunctions and conjunctions (same for normalizeCNF).
      *
-     * @param set containing an answer term
-     * @return DNF
+     * @param set A Set containing the {@code AnswerTerm} that is to be transformed
+     * @return A DNF of the {@code AnswerTerm} but with sets
      */
     private HashSet<HashSet<AnswerTerm>> normalize( HashSet<HashSet<AnswerTerm>> set ) {
         boolean checkAgain = true;
@@ -102,11 +101,10 @@ public class NormalForm {
         }
         return tempSet;
     }
-
+/*
     public HashSet<HashSet<AnswerTerm>> normalizeCNF( HashSet<HashSet<AnswerTerm>> set ) {
         boolean checkAgain = true;
-        HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>();
-        tempSet.addAll( set );
+        HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>( set );
         HashSet<HashSet<AnswerTerm>> toRemove = new HashSet<>();
         HashSet<HashSet<AnswerTerm>> toAdd = new HashSet<>();
 
@@ -116,16 +114,13 @@ public class NormalForm {
             toAdd.clear();
             for ( HashSet<AnswerTerm> s : tempSet ) {
                 for ( AnswerTerm a : s ) {
-                    HashSet<AnswerTerm> temp = new HashSet<>();
-                    temp.addAll( s );
+                    HashSet<AnswerTerm> temp = new HashSet<>( s );
                     if ( a instanceof AnswerTermConjunction ) {
                         AnswerTermConjunction tC = (AnswerTermConjunction) a;
                         toRemove.add( s );
                         temp.remove( a );
-                        HashSet<AnswerTerm> temp1 = new HashSet<>();
-                        HashSet<AnswerTerm> temp2 = new HashSet<>();
-                        temp1.addAll( temp );
-                        temp2.addAll( temp );
+                        HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
+                        HashSet<AnswerTerm> temp2 = new HashSet<>( temp );
                         temp1.add( tC.getAnswerTerm1() );
                         temp2.add( tC.getAnswerTerm2() );
                         toAdd.add( temp1 );
@@ -136,8 +131,7 @@ public class NormalForm {
                         AnswerTermDisjunction tD = (AnswerTermDisjunction) a;
                         toRemove.add( s );
                         temp.remove( a );
-                        HashSet<AnswerTerm> temp1 = new HashSet<>();
-                        temp1.addAll( temp );
+                        HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
                         temp1.add( tD.getAnswerTerm1() );
                         temp1.add( tD.getAnswerTerm2() );
                         toAdd.add( temp1 );
@@ -151,15 +145,15 @@ public class NormalForm {
         }
         return tempSet;
     }
-
+*/
     /**
-     * This method turns the sets resembling a DNF into answer terms in DNF. This is necessary because the set can take
-     * an arbitrary amount of arguments for both disjunction and conjunction (remember that those are only implicit
-     * distinguished [[x,y,...],[x,y,...],...]) but AnswerTerms can only take two arguments
-     * => [[[(x,(y,...)),(x,(y,...))],[(x,(y,...)),(x,(y,...))]], ... ]
+     * This method turns the sets resembling a DNF into {@code AnswerTerm}s in DNF.
+     * This is necessary because the set can take an arbitrary amount of arguments for both disjunction and conjunction
+     * (remember that those are only implicit distinguished [[x,y],[x,y,...],...]) but {@link AnswerTerm}s can only
+     * take two arguments => [[[(x n y) u (x n (y n ...))] u [(x n (y n ...)) u (x n (y n ...))]] u ... ]
      *
-     * @param set resembling a DNF
-     * @return answer term in DNF
+     * @param set A set of sets resembling a DNF
+     * @return An {@code AnswerTerm} in DNF
      */
     private AnswerTerm transformToAnswerTerms( HashSet<HashSet<AnswerTerm>> set ) {
         HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>( set );
@@ -209,10 +203,10 @@ public class NormalForm {
     }
 
     /**
-     * This method turns the sets resembling a DNF into a map aka {@link DataNF}
+     * This method turns the sets resembling a DNF into {@link DataNF}
      *
-     * @param set
-     * @return answer term in {@link DataNF}
+     * @param set A set of sets resembling a DNF
+     * @return A {@link DataNF}
      */
     private DataNF mapVars( HashSet<HashSet<AnswerTerm>> set ) {
         System.out.println( "Set: " + set );
@@ -225,14 +219,13 @@ public class NormalForm {
                 if ( term instanceof Variable ) {
                     vars.add( (Variable) term );
                 } else if ( term instanceof DataNF ) {
-                    //TODO Was passiert, wenn term ein DataNF ist?!
                     nfs.add( (DataNF) term );
                 } else {
                     oths.add( term );
                 }
             }
             if ( !nfs.isEmpty() ) {
-                /**
+                /*
                  * If there already is a DataNF (created at a previous point in time) in the currently looked at
                  * conjunction  it will be updated and then added to the mappedVars. In order to update the DataNF all
                  * Variables and all AnswerTerms are added to each entry in the DataNF (due to the distributive

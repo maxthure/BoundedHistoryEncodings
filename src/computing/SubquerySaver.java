@@ -7,12 +7,12 @@ import queries.*;
 import java.util.HashSet;
 
 /**
- * This class saves all necessary subqueries for future reference
+ * This class saves all necessary subqueries for future reference.
  */
 public class SubquerySaver {
 
-    private HashSet<DataPhi> savedSubqueries = new HashSet<>();
-    private FunctionPhi functionPhi = new FunctionPhi( this );
+    private final HashSet<DataPhi> savedSubqueries = new HashSet<>();
+    private final FunctionPhi functionPhi = new FunctionPhi( this );
 
     public void saveSubqueries( DataPhi phi ) {
         saveSubqueries( phi.getQuery(), phi.getPointInTime() );
@@ -70,8 +70,6 @@ public class SubquerySaver {
         for ( DataPhi p : savedSubqueries ) {
             if ( i == p.getPointInTime() && p.getQuery().equals( query ) ) {
                 return p.getDataNF();
-                //System.out.println( "Subquery: " + p.getAnswerTerm() );
-                //return p.getAnswerTerm();
             }
         }
         return null;

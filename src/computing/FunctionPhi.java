@@ -8,8 +8,8 @@ import queries.*;
  */
 public class FunctionPhi {
 
-    private SubquerySaver subquerySaver;
-    private NormalForm normalForm = new NormalForm();
+    private final SubquerySaver subquerySaver;
+    private final NormalForm normalForm = new NormalForm();
     int pointInTime = 0;
 
     public FunctionPhi( SubquerySaver subquerySaver ) {
@@ -17,17 +17,19 @@ public class FunctionPhi {
     }
 
     /**
-     * This is the function that is called to compute PhiI. It determines if Phi0 or PhiI is calculated. If PhiI is
-     * to be calculated, variables from past points in time have to be replaced with the corresponding answer at the
-     * given point in time.
+     * This is the function that is called to compute PhiI.
+     * It determines if Phi0 or PhiI is calculated.
+     * If PhiI is to be calculated, variables from past points in time have to be replaced with the corresponding answer
+     * at the current point in time.
      * Furthermore before returning the {@link DataPhi} the AnswerTerms are transformed into DNF and {@link DataNF}.
-     * @param pointInTime
-     * @param query
-     * @return a {@link DataPhi} that represents the answer term to the query at the given point in time. It contains:
-     * - the time in point
-     * - the actual query
-     * - the {@link AnswerTerm} in DNF
-     * - the AnswerTerm in DataNF
+     *
+     * @param pointInTime An int that describes the current point in time
+     * @param query The {@link Query} to be computed
+     * @return A {@code DataPhi} that represents the answer term to the query at the given point in time. It contains:
+     * <li>the time in point
+     * <li>the actual query
+     * <li>the {@link AnswerTerm} in DNF
+     * <li>the AnswerTerm in {@code DataNF}
      */
     public DataPhi compute( int pointInTime, Query query ) {
         if ( pointInTime == 0 ) {
@@ -42,8 +44,9 @@ public class FunctionPhi {
 
     /**
      * This function recursively calculates Phi0 as defined in the paper.
-     * @param query
-     * @return the answer term for the query at time in point 0
+     *
+     * @param query The {@link Query} to be computed
+     * @return The {@link AnswerTerm} for the query at time in point 0
      */
     private AnswerTerm phiZero( Query query ) {
         if ( pointInTime > 0 ) {
@@ -68,9 +71,10 @@ public class FunctionPhi {
 
     /**
      * This function recursively calculates PhiI as defined in the paper.
-     * @param i
-     * @param query
-     * @return the answer term for the query at time in point i
+     *
+     * @param i An int that determines the point in time
+     * @param query The {@link Query} to be computed
+     * @return The answer term for the query at time in point i
      */
     private AnswerTerm phiI( int i, Query query ) {
         if ( i < pointInTime ) {
@@ -116,10 +120,11 @@ public class FunctionPhi {
     }
 
     /**
-     * This method replaces variables from past points in time with the corresponding answers for the current time in point
-     * @param timeInPoint
-     * @param answerTerm
-     * @return
+     * This method replaces variables from past points in time with the corresponding answers for the current point in time
+     *
+     * @param timeInPoint An int that describes the current point in time
+     * @param answerTerm An {@code AnswerTerm} with old Variables
+     * @return An {@code AnswerTerm} with old Variables replaced by corresponding answer at current point in time
      */
     private AnswerTerm replaceVariables( int timeInPoint, AnswerTerm answerTerm ) {
         if ( answerTerm instanceof AnswerTermDisjunction ) {

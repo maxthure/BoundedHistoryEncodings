@@ -5,7 +5,7 @@ package queries;
  */
 public class WeakNext implements Query {
 
-    Query subquery;
+    final Query subquery;
 
     public WeakNext( Query subquery ) {
         this.subquery = subquery;

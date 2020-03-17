@@ -5,7 +5,7 @@ package queries;
  */
 public class WeakPrevious implements Query {
 
-    Query subquery;
+    final Query subquery;
 
     public WeakPrevious( Query subquery ) {
         this.subquery = subquery;

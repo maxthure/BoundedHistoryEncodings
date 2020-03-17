@@ -5,8 +5,8 @@ package queries;
  */
 public class Disjunction implements Query {
 
-    private Query subquery1;
-    private Query subquery2;
+    private final Query subquery1;
+    private final Query subquery2;
 
     public Disjunction( Query subquery1, Query subquery2 ) {
         this.subquery1 = subquery1;

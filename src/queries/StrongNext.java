@@ -5,7 +5,7 @@ package queries;
  */
 public class StrongNext implements Query {
 
-    Query subquery;
+    final Query subquery;
 
     public StrongNext( Query subquery ) {
         this.subquery = subquery;
