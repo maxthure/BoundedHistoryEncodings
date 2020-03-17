@@ -1,5 +1,9 @@
 package results;
 
+
+/**
+ * This class represents a conjunction of answer terms in an answer term.
+ */
 public class AnswerTermConjunction implements AnswerTerm {
 
     AnswerTerm answerTerm1;

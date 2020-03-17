@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents an until in a query.
+ */
 public class Until implements Query {
 
     private Query subquery1;

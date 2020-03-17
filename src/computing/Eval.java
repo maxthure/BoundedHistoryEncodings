@@ -10,6 +10,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * This class is supposed to evaluate a given answer term. The way this class has to work at the end is dependent on
+ * the input in the first instance and the way the given answer term is constructed.
+ */
 public class Eval {
 
     public void eval( AnswerTerm answerTerm ) {

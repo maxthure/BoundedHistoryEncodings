@@ -1,5 +1,8 @@
 package results;
 
+/**
+ * This class represents a disjunction of answer terms in an answer term.
+ */
 public class AnswerTermDisjunction implements AnswerTerm {
 
     AnswerTerm answerTerm1;

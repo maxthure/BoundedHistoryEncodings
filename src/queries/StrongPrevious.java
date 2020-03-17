@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents a strong previous in a query.
+ */
 public class StrongPrevious implements Query {
 
     Query subquery;

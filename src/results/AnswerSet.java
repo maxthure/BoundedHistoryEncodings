@@ -2,6 +2,9 @@ package results;
 
 import queries.*;
 
+/**
+ * This class represents an answer set in an answer term.
+ */
 public class AnswerSet implements AnswerTerm {
 
     int pointInTime;

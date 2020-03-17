@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents a weak next in a query.
+ */
 public class WeakNext implements Query {
 
     Query subquery;

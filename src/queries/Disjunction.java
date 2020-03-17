@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents a disjunction in a query.
+ */
 public class Disjunction implements Query {
 
     private Query subquery1;

@@ -2,6 +2,9 @@ package results;
 
 import queries.Query;
 
+/**
+ * This class represents a variable in an answer term.
+ */
 public class Variable implements AnswerTerm {
 
     int pointInTime;

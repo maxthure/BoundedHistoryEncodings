@@ -6,6 +6,9 @@ import queries.*;
 
 import java.util.HashSet;
 
+/**
+ * This class saves all necessary subqueries for future reference
+ */
 public class SubquerySaver {
 
     private HashSet<DataPhi> savedSubqueries = new HashSet<>();
@@ -66,7 +69,9 @@ public class SubquerySaver {
     public AnswerTerm getAnswerTermFromSavedQuery( int i, Query query ) {
         for ( DataPhi p : savedSubqueries ) {
             if ( i == p.getPointInTime() && p.getQuery().equals( query ) ) {
-                return p.getAnswerTerm();
+                return p.getDataNF();
+                //System.out.println( "Subquery: " + p.getAnswerTerm() );
+                //return p.getAnswerTerm();
             }
         }
         return null;

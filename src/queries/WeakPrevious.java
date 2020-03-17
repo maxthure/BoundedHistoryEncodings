@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents a weak previous in a query.
+ */
 public class WeakPrevious implements Query {
 
     Query subquery;

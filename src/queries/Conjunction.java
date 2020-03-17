@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents a conjunction in a query.
+ */
 public class Conjunction implements Query {
 
     private Query subquery1;

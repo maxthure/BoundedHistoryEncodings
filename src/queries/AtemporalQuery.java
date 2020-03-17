@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents an atemporal query in a query.
+ */
 public class AtemporalQuery implements Query {
 
     String name;

@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents a strong next in a query.
+ */
 public class StrongNext implements Query {
 
     Query subquery;

@@ -1,5 +1,8 @@
 package queries;
 
+/**
+ * This class represents a since in a query.
+ */
 public class Since implements Query {
 
     private Query subquery1;
