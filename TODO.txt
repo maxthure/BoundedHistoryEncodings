@@ -9,25 +9,23 @@ About evaluating and querying:
 Right now the Eval class creates a SQL-query from the given DataNF and then queries the database.
 For this to work the atemporal queries need an actual SQL-query as input.
 The answer to the SQL-query isn't saved yet.
-The answers to the SQL-queries need to be saved in a way that for future reference you don't have to
-query the database again (which is impossible as old databases will be unavailable).
-This could possibly be done by saving the query answers in the DataNF and only at the end consider
-the variables. 
+The answers to the SQL-queries need to be saved in a way that for future reference you don't have to query the database again (which is impossible as old databases will be unavailable).
+This could possibly be done by saving the query answers in the DataNF and only at the end consider the variables.
+To do this one has to distinguish wether a subquery is evaluated or a full query.
+If a subquery is evaluated one can change the whole set of sets of AnswerTerms with exactly one AnswerTerm that points to the table where results are saved.
+If this subquery gets referenced anywhere only this one AnswerSet (and the belonging Variables) are used and therefore there won't be a query that needs an old database.
 
 Testing:
 There are no tests yet.
 Most of the code can be tested without actually providing a database.
-Most classes don't have to be tested at all as they are simple data structures without complicated 
-functions.
+Most classes don't have to be tested at all as they are simple data structures without complicated functions.
 Classes that must be tested:
 -Eval
 -FunctionPhi
 -NormalForm
 -SubquerySaver
 The eval class is not fully completed yet why the testing that is needed can not be determined yet.
-FunctionPhi contains the algorithm given in the paper. To test this class one simply needs to calculate
-queries and see if the results are correct.
-NormalForm turns an AnswerTerm into either an AnswerTerm in DNF (CNF possible) or DataNF. DataNF 
-basically represents the NF chosen in the paper to further reduce AnswerTerms. To test this class one needs to put in arbitrary AnswerTerms and check wether the returned NF is correct.
-SubquerySaver saves all for future reference necessary subqueries. To test this class one needs to put 
-in queries and check afterwards if all necessary subqueries were saved.
+FunctionPhi contains the algorithm given in the paper. To test this class one simply needs to calculate queries and see if the results are correct.
+NormalForm turns an AnswerTerm into either an AnswerTerm in DNF (CNF possible) or DataNF. DataNF basically represents the NF chosen in the paper to further reduce AnswerTerms. To test this class one 
+needs to put in arbitrary AnswerTerms and check wether the returned NF is correct.
+SubquerySaver saves all for future reference necessary subqueries. To test this class one needs to put in queries and check afterwards if all necessary subqueries were saved.

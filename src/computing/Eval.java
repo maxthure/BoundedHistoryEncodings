@@ -81,6 +81,7 @@ public class Eval {
         return stringBuilder.toString();
     }
 
+    //TODO This step is wrong unless you do the evaluation at the end. For saving subqueries only the AnswerTerms have to be considered and saved in the DataNF as 1 AnswerSet.
     /**
      * This method turns one entry of the DataNF into a query.
      * Depending of the type of query that is saved in the {@link Variable} it has different effects on the query.
