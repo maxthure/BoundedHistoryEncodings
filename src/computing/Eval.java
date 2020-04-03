@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -27,8 +28,23 @@ public class Eval {
         queryDB( prepareQuery( answerTermNF ) );
     }
 
-    public String evalSubquery( DataNF answerTermNF){
-        return queryDBforSubqery( prepareQuery( answerTermNF ) );
+    /**
+     * This method gets called to evaluate Subqueries.
+     * It updates the given DataNF in a way that the to the Sets of variables corresponding AnswerSets are evaluated.
+     * @param answerTermNF
+     * @return
+     */
+    public DataNF evalSubquery( DataNF answerTermNF ) {
+        DataNF temp = new DataNF();
+        for ( HashSet<Variable> vars : answerTermNF.keySet() ) {
+            String tempAnswer = queryDBforSubqery( answerTermSetIntoQuery( answerTermNF.get( vars ) ) );
+            HashSet<AnswerTerm> tempAnswerTermSet = new HashSet<>();
+            HashSet<HashSet<AnswerTerm>> tempSetOfAnswerTermSets = new HashSet<>();
+            tempAnswerTermSet.add( new AnswerSet( tempAnswer ) );
+            tempSetOfAnswerTermSets.add( tempAnswerTermSet );
+            temp.put( vars, tempSetOfAnswerTermSets);
+        }
+        return temp;
     }
 
     private void queryDB( String query ) {
@@ -54,31 +70,6 @@ public class Eval {
             e.printStackTrace();
         }
     }
-
-    private String queryDBforSubqery( String query ) {
-        try {
-            Class.forName( "org.sqlite.JDBC" );
-            Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
-            if ( query.isEmpty() ) {
-                return "";
-            }
-            String unique_name  = ( LocalDateTime.now().toString()).replaceAll( "-|:|\\.","_" );
-            query = "CREATE TABLE result_table_"+unique_name+" AS "+query;
-            // TODO println entfernen
-            System.out.println( unique_name );
-            System.out.println( query );
-            Statement st = conn.createStatement();
-            st.executeUpdate( query );
-            st.close();
-            return "SELECT * FROM result_table_"+unique_name;
-
-        } catch ( Exception e ) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-
 
     /**
      * This method prepares the query.
@@ -112,6 +103,7 @@ public class Eval {
     }
 
     //TODO This step is wrong unless you do the evaluation at the end. For saving subqueries only the AnswerTerms have to be considered and saved in the DataNF as 1 AnswerSet.
+
     /**
      * This method turns one entry of the DataNF into a query.
      * Depending of the type of query that is saved in the {@link Variable} it has different effects on the query.
@@ -212,4 +204,33 @@ public class Eval {
         }
         return stringBuilder.toString();
     }
+
+
+    /* This whole section down here is dedicated to querying the database with subqueries so that every important information is saved for later use.
+     * I couldn't use the normal queryDB function because of the huge difference in evaluating variables.
+     */
+
+    private String queryDBforSubqery( String query ) {
+        try {
+            Class.forName( "org.sqlite.JDBC" );
+            Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
+            if ( query.isEmpty() ) {
+                return "";
+            }
+            String unique_name = ( LocalDateTime.now().toString() ).replaceAll( "-|:|\\.", "_" );
+            query = "CREATE TABLE result_table_" + unique_name + " AS " + query;
+            // TODO println entfernen
+            System.out.println( unique_name );
+            System.out.println( query );
+            Statement st = conn.createStatement();
+            st.executeUpdate( query );
+            st.close();
+            return "SELECT * FROM result_table_" + unique_name;
+
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 }

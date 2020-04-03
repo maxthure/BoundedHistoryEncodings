@@ -50,11 +50,18 @@ public class Main {
             //System.out.println( "AT: " + phi.getAnswerTerm() );
             System.out.println( "DataNF: " + phi.getDataNF() );
             eval.eval( result );
+            for ( DataPhi subPhi : subquerySaver.getSavedSubqueries() ) {
+                if(!subPhi.isEvaluated()){
+                    DataNF updatedDataNF = eval.evalSubquery( subPhi.getDataNF() );
+                    subPhi.setDataNF( updatedDataNF );
+                    subPhi.setEvaluated( true );
+                }
+                // TODO println entfernen
+                System.out.println( phi );
+            }
         }
-        for ( DataPhi phi : subquerySaver.getSavedSubqueries() ) {
-            // TODO println entfernen
-            //System.out.println( phi );
-        }
+        System.out.println( subquerySaver.getSavedSubqueries().size() );
+
 
 /*
         AnswerTerm answerTerm = new AnswerTermConjunction( new AnswerTermConjunction( new AnswerSet( new AtemporalQuery( "A" ), 0 ), new AnswerTermDisjunction( new AnswerTermConjunction( new Variable( 0, new AtemporalQuery( "X" ) ), new AnswerTermDisjunction( new Variable( 0, new AtemporalQuery( "X" ) ), new AnswerSet( new AtemporalQuery( "B" ), 0 ) ) ), new AnswerSet( new AtemporalQuery( "C" ), 0 ) ) ),

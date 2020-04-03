@@ -16,6 +16,7 @@ public class DataPhi {
     private int pointInTime;
     private Query query;
     private DataNF dataNF;
+    private boolean evaluated;
 
     //For a version that includes the AnswerTerm in DataPhi:
     private AnswerTerm answerTerm;
@@ -53,9 +54,24 @@ public class DataPhi {
         return answerTerm;
     }
 
+    public void setAnswerTerm( AnswerTerm answerTerm ) {
+        this.answerTerm = answerTerm;
+    }
 
     public DataNF getDataNF() {
         return dataNF;
+    }
+
+    public void setDataNF( DataNF dataNF ) {
+        this.dataNF = dataNF;
+    }
+
+    public boolean isEvaluated() {
+        return evaluated;
+    }
+
+    public void setEvaluated( boolean evaluated ) {
+        this.evaluated = evaluated;
     }
 
     @Override
