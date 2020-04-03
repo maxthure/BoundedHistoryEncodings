@@ -254,6 +254,10 @@ public class NormalForm {
                 mappedVars.get( vars ).add( oths );
             } else {
                 HashSet<HashSet<AnswerTerm>> temp = new HashSet<>();
+                if(oths.isEmpty()){
+                    AnswerTerm at = new AnswerSet( "full" );
+                    oths.add( at );
+                }
                 temp.add( oths );
                 mappedVars.put( vars, temp );
             }

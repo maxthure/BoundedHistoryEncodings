@@ -20,10 +20,9 @@ public class Main {
 
         //Query query = new Disjunction(new Conjunction( new Conjunction( new WeakNext( new AtemporalQuery( "SELECT * FROM table1" ) ), new AtemporalQuery( "SELECT * FROM table2" ) ) , new AtemporalQuery( "SELECT * FROM table3" ) ), new Conjunction( new Conjunction( new StrongNext( new AtemporalQuery( "SELECT * FROM table1" ) ), new AtemporalQuery( "SELECT * FROM table3" ) ) , new AtemporalQuery( "SELECT * FROM table4" ) ) );
         //Query query = new StrongPrevious( new StrongNext( new AtemporalQuery( "A" ) ) );
-        //TODO Diese query zeigt, dass nur "full" zu nichts auswertet!
         //Query query = new WeakPrevious( new StrongNext( new AtemporalQuery( "A" ) ) );
         //Query query = new StrongPrevious( new Conjunction( new StrongNext( new StrongPrevious( new AtemporalQuery( "SELECT * FROM Table1" ) ) ), new AtemporalQuery( "SELECT * FROM Table2" ) ) );
-        //Query query = new Since( new AtemporalQuery( "a" ), new StrongNext( new AtemporalQuery( "b" ) ) );
+        //Query query = new Since( new AtemporalQuery( "a" ), new WeakNext( new AtemporalQuery( "b" ) ) );
         //Query query = new Conjunction( new StrongPrevious( new StrongPrevious( new AtemporalQuery( "SELECT * FROM table1" ) ) ), new Since( new AtemporalQuery( "SELECT * FROM table1" ), new StrongNext( new AtemporalQuery( "SELECT * FROM table2" ) ) ) );
         //Query query = new Disjunction( new Disjunction( new AtemporalQuery( "SELECT * FROM Table1" ), new StrongPrevious( new AtemporalQuery( "SELECT * FROM Table2" ) ) ), new Conjunction( new AtemporalQuery( "SELECT * FROM Table1" ), new AtemporalQuery( "SELECT * FROM Table2" ) ) );
         //Query query = new Conjunction( new AtemporalQuery( "SELECT * FROM Table1" ), new StrongPrevious( new Until( new StrongPrevious( new AtemporalQuery( "SELECT * FROM Table2" ) ), new AtemporalQuery( "SELECT * FROM Table3" ) ) ) );
