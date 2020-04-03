@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 
 /**
@@ -24,6 +25,10 @@ public class Eval {
 
     public void eval( DataNF answerTermNF ) {
         queryDB( prepareQuery( answerTermNF ) );
+    }
+
+    public String evalSubquery( DataNF answerTermNF){
+        return queryDBforSubqery( prepareQuery( answerTermNF ) );
     }
 
     private void queryDB( String query ) {
@@ -49,6 +54,31 @@ public class Eval {
             e.printStackTrace();
         }
     }
+
+    private String queryDBforSubqery( String query ) {
+        try {
+            Class.forName( "org.sqlite.JDBC" );
+            Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
+            if ( query.isEmpty() ) {
+                return "";
+            }
+            String unique_name  = ( LocalDateTime.now().toString()).replaceAll( "-|:|\\.","_" );
+            query = "CREATE TABLE result_table_"+unique_name+" AS "+query;
+            // TODO println entfernen
+            System.out.println( unique_name );
+            System.out.println( query );
+            Statement st = conn.createStatement();
+            st.executeUpdate( query );
+            st.close();
+            return "SELECT * FROM result_table_"+unique_name;
+
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+
 
     /**
      * This method prepares the query.
