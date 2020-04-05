@@ -17,9 +17,9 @@ public class AnswerSet implements AnswerTerm {
         if ( query instanceof AtemporalQuery ) {
             answer = ( (AtemporalQuery) query ).getName();
         } else if ( query instanceof StrongPrevious ) {
-            answer = "empty";
+            answer = "bottom";
         } else if ( query instanceof WeakPrevious ) {
-            answer = "full";
+            answer = "top";
         } else {
             answer = "invalid";
         }

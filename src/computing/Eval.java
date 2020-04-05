@@ -8,7 +8,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -184,13 +183,13 @@ public class Eval {
             /*
              * If emtpy occurs in the AnswerTerms the whole join will be empty
              */
-            if ( temp.equals( "empty" ) ) {
+            if ( temp.equals( "bottom" ) ) {
                 return "";
             }
             /*
              * If full occurs in the AnswerTerms it has no impact on the join
              */
-            if ( !temp.equals( "full" ) ) {
+            if ( !temp.equals( "top" ) ) {
                 if ( first ) {
                     first = false;
                     stringBuilder.append( temp );
