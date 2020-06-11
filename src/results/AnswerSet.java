@@ -25,12 +25,18 @@ public class AnswerSet implements AnswerTerm {
         }
     }
 
-    public AnswerSet( String answer ) {
+    public AnswerSet( Query query, int pointInTime, String answer ) {
+        this.query = query;
+        this.pointInTime = pointInTime;
         this.answer = answer;
     }
 
     public String getAnswer() {
-        return answer;
+        //TODO after testing change this back to simple return
+        if (answer.equals( "bottom" ) || answer.equals( "top" ) || answer.equals( "invalid" ) || answer.startsWith( "SELECT * FROM result_table_" )){
+            return answer;
+        }
+        return answer.replace( "autos", "autos"+pointInTime );
     }
 
     public Query getQuery() {

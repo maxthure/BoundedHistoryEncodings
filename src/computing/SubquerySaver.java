@@ -72,6 +72,12 @@ public class SubquerySaver {
                 return p.getDataNF();
             }
         }
+        //TODO println entfernen
+        System.out.println("Returned null!");
         return null;
+    }
+
+    public void deleteAllOldSubqueries(int pointIntime){
+        savedSubqueries.removeIf( phi -> phi.getPointInTime() < pointIntime );
     }
 }

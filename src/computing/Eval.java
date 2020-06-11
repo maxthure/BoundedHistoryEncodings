@@ -30,16 +30,17 @@ public class Eval {
     /**
      * This method gets called to evaluate Subqueries.
      * It updates the given DataNF in a way that the to the Sets of variables corresponding AnswerSets are evaluated.
-     * @param answerTermNF
+     * @param phi
      * @return
      */
-    public DataNF evalSubquery( DataNF answerTermNF ) {
+    public DataNF evalSubquery( DataPhi phi ) {
+        DataNF answerTermNF = phi.getDataNF();
         DataNF temp = new DataNF();
         for ( HashSet<Variable> vars : answerTermNF.keySet() ) {
             String tempAnswer = queryDBforSubqery( answerTermSetIntoQuery( answerTermNF.get( vars ) ) );
             HashSet<AnswerTerm> tempAnswerTermSet = new HashSet<>();
             HashSet<HashSet<AnswerTerm>> tempSetOfAnswerTermSets = new HashSet<>();
-            tempAnswerTermSet.add( new AnswerSet( tempAnswer ) );
+            tempAnswerTermSet.add( new AnswerSet( phi.getQuery(), phi.getPointInTime(), tempAnswer ) );
             tempSetOfAnswerTermSets.add( tempAnswerTermSet );
             temp.put( vars, tempSetOfAnswerTermSets);
         }
@@ -58,10 +59,11 @@ public class Eval {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery( query );
             while ( rs.next() ) {
-                String column_1 = rs.getString( "column_1" );
-                String column_2 = rs.getString( "column_2" );
+                String column_1 = rs.getString( "marke" );
+                //String column_2 = rs.getString( "price" );
                 // TODO println entfernen
-                System.out.println( column_1 + "\t" + column_2 );
+                System.out.println(column_1);
+                //System.out.println( column_2 + "\t" + "\t"+ "\t"+ "\t"+ "\t"+ "\t" + column_1 );
             }
             st.close();
 
@@ -100,8 +102,6 @@ public class Eval {
         }
         return stringBuilder.toString();
     }
-
-    //TODO This step is wrong unless you do the evaluation at the end. For saving subqueries only the AnswerTerms have to be considered and saved in the DataNF as 1 AnswerSet.
 
     /**
      * This method turns one entry of the DataNF into a query.
@@ -214,13 +214,10 @@ public class Eval {
             Class.forName( "org.sqlite.JDBC" );
             Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
             if ( query.isEmpty() ) {
-                return "";
+                return "bottom";
             }
             String unique_name = ( LocalDateTime.now().toString() ).replaceAll( "-|:|\\.", "_" );
             query = "CREATE TABLE result_table_" + unique_name + " AS " + query;
-            // TODO println entfernen
-            System.out.println( unique_name );
-            System.out.println( query );
             Statement st = conn.createStatement();
             st.executeUpdate( query );
             st.close();

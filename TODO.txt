@@ -25,8 +25,8 @@ Most of the code can be tested without actually providing a database.
 Most classes don't have to be tested at all as they are simple data structures without complicated functions.
 Classes that must be tested:
 -Eval
--FunctionPhi
--NormalForm
+-FunctionPhi 
+-NormalForm (mit Mengen arbeiten und diese vergleichen)
 -SubquerySaver
 The eval class is not fully completed yet why the testing that is needed can not be determined yet.
 FunctionPhi contains the algorithm given in the paper. To test this class one simply needs to calculate queries and see if the results are correct.
