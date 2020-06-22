@@ -30,6 +30,7 @@ public class Eval {
     /**
      * This method gets called to evaluate Subqueries.
      * It updates the given DataNF in a way that the to the Sets of variables corresponding AnswerSets are evaluated.
+     *
      * @param phi
      * @return
      */
@@ -42,7 +43,7 @@ public class Eval {
             HashSet<HashSet<AnswerTerm>> tempSetOfAnswerTermSets = new HashSet<>();
             tempAnswerTermSet.add( new AnswerSet( phi.getQuery(), phi.getPointInTime(), tempAnswer ) );
             tempSetOfAnswerTermSets.add( tempAnswerTermSet );
-            temp.put( vars, tempSetOfAnswerTermSets);
+            temp.put( vars, tempSetOfAnswerTermSets );
         }
         return temp;
     }
@@ -52,17 +53,22 @@ public class Eval {
             Class.forName( "org.sqlite.JDBC" );
             Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
             if ( query.isEmpty() ) {
+                System.out.println( "Empty Query!" );
+                return;
+            }
+            if ( query.equals( "bottom" ) || query.equals( "top" ) ) {
+                System.out.println( query );
                 return;
             }
             // TODO println entfernen
-            System.out.println( query );
+            System.out.println( "SQL query: " + query );
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery( query );
             while ( rs.next() ) {
-                String column_1 = rs.getString( "marke" );
+                String column_1 = rs.getString( "url" );
                 //String column_2 = rs.getString( "price" );
                 // TODO println entfernen
-                System.out.println(column_1);
+                System.out.println( column_1 );
                 //System.out.println( column_2 + "\t" + "\t"+ "\t"+ "\t"+ "\t"+ "\t" + column_1 );
             }
             st.close();
@@ -88,7 +94,7 @@ public class Eval {
              * Check first if temp is empty
              */
             String temp = oneEntryIntoQuery( vars, answerTermNF.get( vars ) );
-            if ( !temp.isEmpty() ) {
+            if ( !temp.isEmpty() && !temp.equals( "bottom" ) ) {
                 if ( firstUnion ) {
                     firstUnion = false;
 
@@ -115,23 +121,24 @@ public class Eval {
      */
     private String oneEntryIntoQuery( HashSet<Variable> vars, HashSet<HashSet<AnswerTerm>> answerTerms ) {
         for ( Variable var : vars ) {
-            if ( !( var.getQuery() instanceof StrongNext || var.getQuery() instanceof WeakNext || var.getQuery() instanceof Until ) ) {
-                throw new IllegalArgumentException();
-            }
             /*
              * Depending on the query inside the {@link Variable} it can evaluate to different queries
              */
-            if ( var.getQuery() instanceof StrongNext || var.getQuery() instanceof Until ) {
+            if ( var.getQuery() instanceof StrongNext || var.getQuery() instanceof Until || var.getQuery() instanceof Eventually || var.getQuery() instanceof StrongNextPredicate || var.getQuery() instanceof UntilPredicate || var.getQuery() instanceof EventuallyPredicate ) {
                 /*
                  * The variable evaluates to an empty set therefore returning nothing
                  */
-                return "";
+                return "bottom";
             }
         }
         /*
          * If vars is empty or only contains Variables that contain WeakNext the part above will be skipped and only
          * the AnswerTerms will be considered.
          */
+        String temp = answerTermSetIntoQuery( answerTerms );
+        if ( temp.isEmpty() && !vars.isEmpty() ) {
+            return "top";
+        }
         return answerTermSetIntoQuery( answerTerms );
     }
 
@@ -150,7 +157,7 @@ public class Eval {
              * Check first if temp is empty
              */
             String temp = answerTermsIntoQuery( terms );
-            if ( !temp.isEmpty() ) {
+            if ( !temp.isEmpty() && !temp.equals( "bottom" )) {
                 if ( firstUnion ) {
                     firstUnion = false;
                 } else {
@@ -181,13 +188,13 @@ public class Eval {
             AnswerSet set = (AnswerSet) term;
             String temp = set.getAnswer();
             /*
-             * If emtpy occurs in the AnswerTerms the whole join will be empty
+             * If bottom occurs in the AnswerTerms the whole join will be empty
              */
             if ( temp.equals( "bottom" ) ) {
-                return "";
+                return "bottom";
             }
             /*
-             * If full occurs in the AnswerTerms it has no impact on the join
+             * If top occurs in the AnswerTerms it has no impact on the join
              */
             if ( !temp.equals( "top" ) ) {
                 if ( first ) {
@@ -214,7 +221,12 @@ public class Eval {
             Class.forName( "org.sqlite.JDBC" );
             Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
             if ( query.isEmpty() ) {
+                System.out.println( "Empty query!" );
                 return "bottom";
+            }
+
+            if ( query.equals( "bottom" ) || query.equals( "top" ) ) {
+                return query;
             }
             String unique_name = ( LocalDateTime.now().toString() ).replaceAll( "-|:|\\.", "_" );
             query = "CREATE TABLE result_table_" + unique_name + " AS " + query;

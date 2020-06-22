@@ -1,13 +1,13 @@
 package queries;
 
 /**
- * This class represents a weak next in a query.
+ * This class represents an always in a query.
  */
-public class WeakNext implements Query {
+public class Always implements Query {
 
     private final Query subquery;
 
-    public WeakNext( Query subquery ) {
+    public Always( Query subquery ) {
         this.subquery = subquery;
     }
 
@@ -17,13 +17,13 @@ public class WeakNext implements Query {
 
     @Override
     public String toString() {
-        return "WeakNext(" + subquery + ")";
+        return "Always(" + subquery + ")";
     }
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof WeakNext ) {
-            return ( this.subquery.equals( ( (WeakNext) query ).subquery ) );
+        if ( query instanceof Always ) {
+            return ( this.subquery.equals( ( (Always) query ).subquery ) );
         }
         return false;
     }

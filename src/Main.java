@@ -14,18 +14,21 @@ public class Main {
 
         int pointInTime = 1; //14.04.2020
 
-        //Query query1 = new Disjunction( new Disjunction( new StrongPrevious( new StrongPrevious( new AtemporalQuery( "SELECT marke, AVG(price) AS p FROM autos GROUP BY marke HAVING p > 15001" ) ) ), new StrongPrevious( new AtemporalQuery( "SELECT marke, AVG(price) AS q FROM autos GROUP BY marke HAVING q > 15001" ) ) ), new AtemporalQuery( "SELECT marke, AVG(price) AS r FROM autos GROUP BY marke HAVING r > 15001" ) );
-        Query query1 = new Conjunction( new StrongPrevious( new AtemporalQuery( "SELECT marke, AVG(price) AS p FROM autos" ) ), new AtemporalQuery( "SELECT marke, AVG(price) AS q FROM autos WHERE p < q" ) );
+        Query query1 = new Conjunction( new AtemporalQuery( "SELECT url FROM autos" ) , new Filter( "SELECT url FROM phi", new StrongPrevious( new AtemporalQuery( "SELECT * FROM autos" ) ) ) );
+        //Query query1 = new Conjunction( new AtemporalQuery( "SELECT url FROM autos" ) , new StrongPrevious( new AtemporalQuery( "SELECT url FROM autos" ) ) );
+
+        //Query query1 = new Conjunction( new StrongPrevious( new StrongPrevious( new AtemporalQuery( "SELECT marke, AVG(price) AS p FROM autos GROUP BY marke HAVING p > 15001" ) ) ), new StrongPrevious( new AtemporalQuery( "SELECT marke, AVG(price) AS q FROM autos GROUP BY marke HAVING q > 15001" ) ) );
+        //Query query1 = new Conjunction( new StrongPrevious( new AtemporalQuery( "SELECT marke, AVG(price) AS p FROM autos" ) ), new AtemporalQuery( "SELECT marke, AVG(price) AS q FROM autos WHERE p < q" ) );
+        //Query query1 = new WeakNext( new AtemporalQuery( "SELECT url FROM autos" ) );
+        //Query query1 = new Eventually( new AtemporalQuery( "SELECT url FROM autos" ) );
+        //Query query1 = new StrongPreviousPredicate( new AtemporalQuery( "SELECT url FROM autos" ), 1 );
+
         for ( int i = 0; i < 3; i++ ) {
             DataPhi phi = functionPhi.compute( i, query1 );
             subquerySaver.saveSubqueries( phi );
             //TODO grundsätzlich müsste das gehen. Unbedingt beobachten!
             subquerySaver.deleteAllOldSubqueries(i);
             //TODO remove println
-            System.out.println("Subqueries:");
-            for ( DataPhi subPhi : subquerySaver.getSavedSubqueries() ) {
-                System.out.println(subPhi);
-            }
             DataNF result = phi.getDataNF();
             eval.eval( result );
             for ( DataPhi subPhi : subquerySaver.getSavedSubqueries() ) {
@@ -35,8 +38,11 @@ public class Main {
                     subPhi.setEvaluated( true );
                 }
             }
+            System.out.println("Subqueries after doing everything at "+i+":");
+            for ( DataPhi subPhi : subquerySaver.getSavedSubqueries() ) {
+                System.out.println(subPhi);
+            }
         }
-
 
         /**
          * At this point some example Queries are generated that are mainly used for quick testing while developing.

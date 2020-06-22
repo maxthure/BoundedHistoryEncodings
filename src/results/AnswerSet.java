@@ -16,9 +16,9 @@ public class AnswerSet implements AnswerTerm {
         this.pointInTime = pointInTime;
         if ( query instanceof AtemporalQuery ) {
             answer = ( (AtemporalQuery) query ).getName();
-        } else if ( query instanceof StrongPrevious ) {
+        } else if ( query instanceof StrongPrevious || query instanceof StrongPreviousPredicate ) {
             answer = "bottom";
-        } else if ( query instanceof WeakPrevious ) {
+        } else if ( query instanceof WeakPrevious || query instanceof WeakPreviousPredicate ) {
             answer = "top";
         } else {
             answer = "invalid";
@@ -32,11 +32,24 @@ public class AnswerSet implements AnswerTerm {
     }
 
     public String getAnswer() {
+        String temp;
         //TODO after testing change this back to simple return
         if (answer.equals( "bottom" ) || answer.equals( "top" ) || answer.equals( "invalid" ) || answer.startsWith( "SELECT * FROM result_table_" )){
-            return answer;
+            temp = answer;
         }
-        return answer.replace( "autos", "autos"+pointInTime );
+        else {
+            temp = answer.replace( "autos", "autos"+pointInTime );
+        }
+        if (query instanceof Filter){
+            if (temp.equals( "bottom" )){
+                temp = "bottom";
+            } else if (temp.equals( "top" )) {
+                temp = ( (Filter) query ).getFilter().replace( "phi", "autos" );
+            } else {
+                temp = ( (Filter) query ).getFilter().replace( "phi", "(" + temp + ")" );
+            }
+        }
+        return temp;
     }
 
     public Query getQuery() {
@@ -45,6 +58,9 @@ public class AnswerSet implements AnswerTerm {
 
     @Override
     public String toString() {
+        if (query instanceof Filter){
+            return  ( (Filter) query ).getFilter().replace( "phi", "("+answer+")" );
+        }
         return answer;
     }
 

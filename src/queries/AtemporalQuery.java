@@ -5,7 +5,7 @@ package queries;
  */
 public class AtemporalQuery implements Query {
 
-    final String name;
+    private final String name;
 
     public AtemporalQuery( String name ) {
         this.name = name;

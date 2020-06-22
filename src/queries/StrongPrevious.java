@@ -5,7 +5,7 @@ package queries;
  */
 public class StrongPrevious implements Query {
 
-    final Query subquery;
+    private final Query subquery;
 
     public StrongPrevious( Query subquery ) {
         this.subquery = subquery;

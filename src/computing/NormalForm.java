@@ -1,5 +1,6 @@
 package computing;
 
+import queries.Filter;
 import results.*;
 
 import java.util.HashSet;
