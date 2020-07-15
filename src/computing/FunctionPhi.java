@@ -125,7 +125,7 @@ public class FunctionPhi {
             return phiZero( ( (SincePredicate) query ).getSubquery2() );
         } else if ( query instanceof Filter ) {
             AnswerTerm temp = phiZero(( (Filter) query ).getSubquery() );
-            return new AnswerSet( query, 0, temp.toString() );
+            return new FilterAnswerSet( (Filter) query, 0, normalForm.prepareNF( temp ) );
         } else {
             return new AnswerSet( query, 0 );
         }
@@ -166,17 +166,17 @@ public class FunctionPhi {
             return conjunction( phiI( i, ( (Always) query ).getSubquery() ), new Variable( i, query ) );
         } else if ( query instanceof AlwaysPast ) {
             if ( i <= 1 ) {
-                return conjunction( phiI( i, ( (AlwaysPast) query ).getSubquery() ), phiZero( ( (AlwaysPast) query ).getSubquery() ) );
+                return conjunction( phiI( i, ( (AlwaysPast) query ).getSubquery() ), phiZero( query ) );
             } else {
-                return conjunction( phiI( i, ( (AlwaysPast) query ).getSubquery() ), phiI( i - 1, ( (AlwaysPast) query ).getSubquery() ) );
+                return conjunction( phiI( i, ( (AlwaysPast) query ).getSubquery() ), phiI( i - 1, query  ) );
             }
         } else if ( query instanceof Eventually ) {
             return disjunction( phiI( i, ( (Eventually) query ).getSubquery() ), new Variable( i, query ) );
         } else if ( query instanceof EventuallyPast ) {
             if ( i <= 1 ) {
-                return disjunction( phiI( i, ( (EventuallyPast) query ).getSubquery() ), phiZero( ( (EventuallyPast) query ).getSubquery() ) );
+                return disjunction( phiI( i, ( (EventuallyPast) query ).getSubquery() ), phiZero( query ) );
             } else {
-                return disjunction( phiI( i, ( (EventuallyPast) query ).getSubquery() ), phiI( i - 1, ( (EventuallyPast) query ).getSubquery() ) );
+                return disjunction( phiI( i, ( (EventuallyPast) query ).getSubquery() ), phiI( i - 1, query ) );
             }
         } else if ( query instanceof Until ) {
             return disjunction( phiI( i, ( (Until) query ).getSubquery2() ), conjunction( phiI( i, ( (Until) query ).getSubquery1() ), new Variable( i, query ) ) );
@@ -244,12 +244,12 @@ public class FunctionPhi {
             }
         } else if ( query instanceof UntilPredicate ) {
             if ( ( (UntilPredicate) query ).getP() == 0 ) {
-                return phiZero( ( (UntilPredicate) query ).getSubquery2() );
+                return phiI( i, ( (UntilPredicate) query ).getSubquery2() );
             }
             return disjunction( phiI( i, ( (UntilPredicate) query ).getSubquery2() ), conjunction( phiI( i, ( (UntilPredicate) query ).getSubquery1() ), new Variable( i, query ) ) );
         } else if ( query instanceof SincePredicate ) {
             if ( ( (SincePredicate) query ).getP() == 0 ) {
-                return phiZero( ( (SincePredicate) query ).getSubquery2() );
+                return phiI( i, ( (SincePredicate) query ).getSubquery2() );
             }
             if ( i <= 1 ) {
                 return disjunction( phiI( i, ( (SincePredicate) query ).getSubquery2() ), conjunction( phiI( i, ( (SincePredicate) query ).getSubquery1() ), phiZero( new SincePredicate( ( (SincePredicate) query ).getSubquery1(), ( (SincePredicate) query ).getSubquery2(), ( (SincePredicate) query ).getP() - 1 ) ) ) );
@@ -258,7 +258,7 @@ public class FunctionPhi {
             }
         } else if ( query instanceof Filter ) {
             AnswerTerm temp = phiI( i, ( (Filter) query ).getSubquery() );
-            return new AnswerSet( query, i, temp.toString() );
+            return new FilterAnswerSet( (Filter) query, i, normalForm.prepareNF( temp )  );
         } else {
             return new AnswerSet( query, i );
         }

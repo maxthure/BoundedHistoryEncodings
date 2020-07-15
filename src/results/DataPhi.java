@@ -76,7 +76,7 @@ public class DataPhi {
 
     @Override
     public int hashCode() {
-        return query.hashCode();
+        return 0;
     }
 
     @Override

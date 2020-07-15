@@ -65,11 +65,13 @@ public class NormalForm {
                         if ( tD.getAnswerTerm1().toString().equals( "bottom" ) ) {
                             temp2.add( tD.getAnswerTerm2() );
                             toAdd.add( temp2 );
+                            checkAgain = true;
                             break;
                         }
                         if ( tD.getAnswerTerm2().toString().equals( "bottom" ) ) {
                             temp1.add( tD.getAnswerTerm1() );
                             toAdd.add( temp1 );
+                            checkAgain = true;
                             break;
                         }
                         temp1.add( tD.getAnswerTerm1() );
@@ -231,7 +233,15 @@ public class NormalForm {
                 DataNF nfsSummarized = new DataNF();
                 for ( DataNF nf : nfs ) {
                     if ( nfsSummarized.isEmpty() ) {
-                        nfsSummarized = nf;
+                        for (HashSet<Variable> v : nf.keySet()){
+                            HashSet<HashSet<AnswerTerm>> hhas = new HashSet<>();
+                            for ( HashSet<AnswerTerm> has : nf.get( v )){
+                                HashSet<AnswerTerm> as = new HashSet<>();
+                                as.addAll( has );
+                                hhas.add( as );
+                            }
+                            nfsSummarized.put( v, hhas );
+                        }
                     } else {
                         DataNF temp = new DataNF();
                         HashSet<Variable> tempVars = new HashSet<>();

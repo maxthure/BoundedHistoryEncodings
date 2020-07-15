@@ -23,8 +23,8 @@ import java.util.HashSet;
  */
 public class Eval {
 
-    public void eval( DataNF answerTermNF ) {
-        queryDB( prepareQuery( answerTermNF ) );
+    public int eval( DataNF answerTermNF ) {
+        return queryDB( prepareQuery( answerTermNF ) );
     }
 
     /**
@@ -48,34 +48,41 @@ public class Eval {
         return temp;
     }
 
-    private void queryDB( String query ) {
+    private int queryDB( String query ) {
+        int size = 0;
         try {
             Class.forName( "org.sqlite.JDBC" );
-            Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
+            Connection conn = DriverManager.getConnection( "jdbc:sqlite:db.sqlite" );
             if ( query.isEmpty() ) {
-                System.out.println( "Empty Query!" );
-                return;
+                // TODO println entfernen
+                //System.out.println( "Empty Query!" );
+                return 0;
             }
             if ( query.equals( "bottom" ) || query.equals( "top" ) ) {
-                System.out.println( query );
-                return;
+                // TODO println entfernen
+                //System.out.println( query );
+                if (query.equals( "top" )){
+                    return -1;
+                }
+                return 0;
             }
             // TODO println entfernen
-            System.out.println( "SQL query: " + query );
+            //System.out.println( "SQL query: " + query );
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery( query );
             while ( rs.next() ) {
-                String column_1 = rs.getString( "url" );
+                size++;
+                //String column_1 = rs.getString( "url" );
                 //String column_2 = rs.getString( "price" );
-                // TODO println entfernen
-                System.out.println( column_1 );
-                //System.out.println( column_2 + "\t" + "\t"+ "\t"+ "\t"+ "\t"+ "\t" + column_1 );
             }
+            // TODO println entfernen
+            System.out.println("Anzahl der Antworten: "+size);
             st.close();
 
         } catch ( Exception e ) {
             e.printStackTrace();
         }
+        return size;
     }
 
     /**
@@ -90,10 +97,14 @@ public class Eval {
 
         boolean firstUnion = true;
         for ( HashSet<Variable> vars : answerTermNF.keySet() ) {
+
+            String temp = oneEntryIntoQuery( vars, answerTermNF.get( vars ) );
+            if (temp.equals( "top" )){
+                return "top";
+            }
             /*
              * Check first if temp is empty
              */
-            String temp = oneEntryIntoQuery( vars, answerTermNF.get( vars ) );
             if ( !temp.isEmpty() && !temp.equals( "bottom" ) ) {
                 if ( firstUnion ) {
                     firstUnion = false;
@@ -139,7 +150,7 @@ public class Eval {
         if ( temp.isEmpty() && !vars.isEmpty() ) {
             return "top";
         }
-        return answerTermSetIntoQuery( answerTerms );
+        return temp;
     }
 
     /**
@@ -153,11 +164,15 @@ public class Eval {
         StringBuilder stringBuilder = new StringBuilder();
         boolean firstUnion = true;
         for ( HashSet<AnswerTerm> terms : answerTerms ) {
-            /*
-             * Check first if temp is empty
-             */
+
             String temp = answerTermsIntoQuery( terms );
-            if ( !temp.isEmpty() && !temp.equals( "bottom" )) {
+            if (temp.equals( "top" )){
+                return "top";
+            }
+            /*
+             * Check if temp is empty or bottom
+             */
+            if ( !temp.isEmpty() && !temp.equals( "bottom" ) ) {
                 if ( firstUnion ) {
                     firstUnion = false;
                 } else {
@@ -181,12 +196,26 @@ public class Eval {
     private String answerTermsIntoQuery( HashSet<AnswerTerm> answerTerms ) {
         StringBuilder stringBuilder = new StringBuilder();
         boolean first = true;
+        boolean top = false;
         for ( AnswerTerm term : answerTerms ) {
-            if ( !( term instanceof AnswerSet ) ) {
+            if ( !( term instanceof AnswerSet || term instanceof FilterAnswerSet ) ) {
                 throw new IllegalArgumentException();
             }
-            AnswerSet set = (AnswerSet) term;
-            String temp = set.getAnswer();
+            String temp = "bottom";
+            if ( term instanceof AnswerSet ) {
+                AnswerSet set = (AnswerSet) term;
+                temp = set.getAnswer();
+            }
+            else {
+                temp = prepareQuery( ( (FilterAnswerSet) term ).getAnswer() );
+                if ( temp.isEmpty() || temp.equals( "bottom" ) ) {
+                    temp = "bottom";
+                } else if ( temp.equals( "top" ) ) {
+                    temp = ( (FilterAnswerSet) term ).getQuery().getFilter().replace( "phi", "autos" );
+                } else {
+                    temp = ( (FilterAnswerSet) term ).getQuery().getFilter().replace( "phi", "(" + temp + ")" );
+                }
+            }
             /*
              * If bottom occurs in the AnswerTerms the whole join will be empty
              */
@@ -199,14 +228,18 @@ public class Eval {
             if ( !temp.equals( "top" ) ) {
                 if ( first ) {
                     first = false;
-                    stringBuilder.append( temp );
-
+                    stringBuilder.append( "SELECT * FROM (" + temp + ")" );
                 } else {
                     stringBuilder.append( " NATURAL JOIN (" );
                     stringBuilder.append( temp );
                     stringBuilder.append( ")" );
                 }
+            } else {
+                top = true;
             }
+        }
+        if(first && top){
+            return "top";
         }
         return stringBuilder.toString();
     }
@@ -219,7 +252,7 @@ public class Eval {
     private String queryDBforSubqery( String query ) {
         try {
             Class.forName( "org.sqlite.JDBC" );
-            Connection conn = DriverManager.getConnection( "jdbc:sqlite:identifier.sqlite" );
+            Connection conn = DriverManager.getConnection( "jdbc:sqlite:db.sqlite" );
             if ( query.isEmpty() ) {
                 System.out.println( "Empty query!" );
                 return "bottom";

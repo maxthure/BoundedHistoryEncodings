@@ -32,24 +32,11 @@ public class AnswerSet implements AnswerTerm {
     }
 
     public String getAnswer() {
-        String temp;
         //TODO after testing change this back to simple return
         if (answer.equals( "bottom" ) || answer.equals( "top" ) || answer.equals( "invalid" ) || answer.startsWith( "SELECT * FROM result_table_" )){
-            temp = answer;
+            return answer;
         }
-        else {
-            temp = answer.replace( "autos", "autos"+pointInTime );
-        }
-        if (query instanceof Filter){
-            if (temp.equals( "bottom" )){
-                temp = "bottom";
-            } else if (temp.equals( "top" )) {
-                temp = ( (Filter) query ).getFilter().replace( "phi", "autos" );
-            } else {
-                temp = ( (Filter) query ).getFilter().replace( "phi", "(" + temp + ")" );
-            }
-        }
-        return temp;
+        return answer.replace( "autos", "autos"+pointInTime );
     }
 
     public Query getQuery() {
@@ -58,9 +45,6 @@ public class AnswerSet implements AnswerTerm {
 
     @Override
     public String toString() {
-        if (query instanceof Filter){
-            return  ( (Filter) query ).getFilter().replace( "phi", "("+answer+")" );
-        }
         return answer;
     }
 
