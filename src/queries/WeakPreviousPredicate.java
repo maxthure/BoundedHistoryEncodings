@@ -25,16 +25,16 @@ public class WeakPreviousPredicate implements PredicateQuery {
     public String toString() {
         return "WeakPreviousPredicate(" + p + ", "  + subquery + ")";
     }
-
-    @Override
+  @Override
     public boolean equals( Query query ) {
-        if ( query instanceof WeakPreviousPredicate ) {
-            WeakPreviousPredicate q = (WeakPreviousPredicate) query;
-            return ( this.p == q.p && this.subquery.equals( q.subquery ) );
-        }
+        boolean temp = false;
         if (this.p == 0){
-            return this.subquery.equals( query );
+            temp = this.subquery.equals( query );
         }
-        return false;
+        if ( query instanceof WeakPreviousPredicate && !temp ) {
+            WeakPreviousPredicate q = (WeakPreviousPredicate) query;
+            temp = ( this.p == q.p && this.subquery.equals( q.subquery ) );
+        }
+        return temp;
     }
 }

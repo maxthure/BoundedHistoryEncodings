@@ -22,8 +22,12 @@ public class Always implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof Always ) {
-            return ( this.subquery.equals( ( (Always) query ).subquery ) );
+        if ( query instanceof PredicateQuery ) {
+            return query.equals( this );
+        } else {
+            if ( query instanceof Always ) {
+                return ( this.subquery.equals( ( (Always) query ).subquery ) );
+            }
         }
         return false;
     }

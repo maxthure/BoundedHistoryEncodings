@@ -78,7 +78,7 @@ public class Eval {
             // TODO println entfernen
             System.out.println("Anzahl der Antworten: "+size);
             st.close();
-
+            conn.close();
         } catch ( Exception e ) {
             e.printStackTrace();
         }
@@ -254,7 +254,8 @@ public class Eval {
             Class.forName( "org.sqlite.JDBC" );
             Connection conn = DriverManager.getConnection( "jdbc:sqlite:db.sqlite" );
             if ( query.isEmpty() ) {
-                System.out.println( "Empty query!" );
+                //TODO println entfernen
+                //System.out.println( "Empty query!" );
                 return "bottom";
             }
 
@@ -266,6 +267,7 @@ public class Eval {
             Statement st = conn.createStatement();
             st.executeUpdate( query );
             st.close();
+            conn.close();
             return "SELECT * FROM result_table_" + unique_name;
 
         } catch ( Exception e ) {

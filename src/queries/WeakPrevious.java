@@ -22,8 +22,12 @@ public class WeakPrevious implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof WeakPrevious ) {
-            return ( this.subquery.equals( ( (WeakPrevious) query ).subquery ) );
+        if ( query instanceof PredicateQuery ) {
+            return query.equals( this );
+        } else {
+            if ( query instanceof WeakPrevious ) {
+                return ( this.subquery.equals( ( (WeakPrevious) query ).subquery ) );
+            }
         }
         return false;
     }

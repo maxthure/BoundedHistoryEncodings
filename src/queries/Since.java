@@ -28,8 +28,12 @@ public class Since implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof Since ) {
-            return ( this.subquery1.equals( ( (Since) query ).subquery1 ) && this.subquery2.equals( ( (Since) query ).subquery2 ) );
+        if ( query instanceof PredicateQuery ) {
+            return query.equals( this );
+        } else {
+            if ( query instanceof Since ) {
+                return ( this.subquery1.equals( ( (Since) query ).subquery1 ) && this.subquery2.equals( ( (Since) query ).subquery2 ) );
+            }
         }
         return false;
     }

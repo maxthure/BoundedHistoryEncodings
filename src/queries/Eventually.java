@@ -22,8 +22,12 @@ public class Eventually implements Query{
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof Eventually ) {
-            return ( this.subquery.equals( ( (Eventually) query ).subquery ) );
+        if ( query instanceof PredicateQuery ) {
+            return query.equals( this );
+        } else {
+            if ( query instanceof Eventually ) {
+                return ( this.subquery.equals( ( (Eventually) query ).subquery ) );
+            }
         }
         return false;
     }

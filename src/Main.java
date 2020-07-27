@@ -1,15 +1,12 @@
-import results.*;
 import computing.*;
 import queries.*;
+import results.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -21,8 +18,13 @@ public class Main {
         FunctionPhi functionPhi = new FunctionPhi( subquerySaver );
         Eval eval = new Eval();
 
-        Query query1 = new AlwaysPredicate ( new UntilPredicate ( new Eventually ( new EventuallyPast ( new AtemporalQuery( "SELECT url FROM autos WHERE NOT deleted" ) ) ), new StrongPrevious ( new Eventually ( new StrongPreviousPredicate ( new AtemporalQuery( "SELECT url FROM autos WHERE NOT deleted" ), 4 ) ) ), 0 ), 7 );
+        SubqueryCounter subqueryCounter = new SubqueryCounter();
+        Query query1 = new Conjunction( new StrongPrevious( new Since( new AtemporalQuery( "SELECT url FROM autos WHERE price $>$ 1000000" ), new AtemporalQuery( "SELECT url FROM autos WHERE price $<$ 1000000" ) ) ), new AtemporalQuery( "SELECT url FROM autos WHERE deleted" ) );
+        System.out.println(subqueryCounter.getResult( query1 ));
 
+
+
+/*
         StringBuilder sb = new StringBuilder();
         sb.append( "Zeitpunkt,Zus. Einträge,Ges. Zus.,Gesamt,#Antworten,Zeit in Millis,#Tabellen\n" );
 
@@ -44,7 +46,7 @@ public class Main {
         for ( int i = 0; i < 10; i++ ) {
             System.out.println( "----------------------------------------------------" );
             long time = System.currentTimeMillis();
-            DataPhi phi = functionPhi.compute( i, query1 );
+            DataPhi phi = functionPhi.compute( i, query6 );
             subquerySaver.saveSubqueries( phi );
             //TODO grundsätzlich müsste das gehen. Unbedingt beobachten!
             subquerySaver.deleteAllOldSubqueries( i );
@@ -82,6 +84,7 @@ public class Main {
                                         sizes.add( Integer.parseInt( column_1 ) );
                                     }
                                     st.close();
+                                    conn.close();
                                 } catch ( Exception e ) {
                                     e.printStackTrace();
                                 }

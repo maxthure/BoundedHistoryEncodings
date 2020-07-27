@@ -86,6 +86,19 @@ public class NormalForm {
                         temp.remove( a );
                         HashSet<AnswerTerm> temp1 = new HashSet<>( temp );
                         if ( tC.getAnswerTerm1().toString().equals( "bottom" ) || tC.getAnswerTerm2().toString().equals( "bottom" ) ) {
+                            checkAgain = true;
+                            break;
+                        }
+                        if ( tC.getAnswerTerm1().toString().equals( "top" ) ) {
+                            temp1.add( tC.getAnswerTerm2() );
+                            toAdd.add( temp1 );
+                            checkAgain = true;
+                            break;
+                        }
+                        if ( tC.getAnswerTerm2().toString().equals( "top" ) ) {
+                            temp1.add( tC.getAnswerTerm1() );
+                            toAdd.add( temp1 );
+                            checkAgain = true;
                             break;
                         }
                         temp1.add( tC.getAnswerTerm1() );
@@ -162,12 +175,12 @@ public class NormalForm {
     private AnswerTerm transformToAnswerTerms( HashSet<HashSet<AnswerTerm>> set ) {
         HashSet<HashSet<AnswerTerm>> tempSet = new HashSet<>( set );
 
-        if ( tempSet.isEmpty() ) return null;
+        if ( tempSet.isEmpty() ) return new AnswerSet( null, -1, "bottom" );
 
         HashSet<AnswerTerm> s = tempSet.iterator().next();
         HashSet<AnswerTerm> tempS = new HashSet<>( s );
 
-        if ( tempS.isEmpty() ) return null;
+        if ( tempS.isEmpty() ) return new AnswerSet( null, -1, "bottom" );
 
         AnswerTerm term = tempS.iterator().next();
         tempS.remove( term );
@@ -215,6 +228,15 @@ public class NormalForm {
      */
     private DataNF mapVars( HashSet<HashSet<AnswerTerm>> set ) {
         DataNF mappedVars = new DataNF();
+        if (set.isEmpty()){
+            AnswerTerm at = new AnswerSet( null, -1, "bottom" );
+            HashSet<Variable> vars = new HashSet<>();
+            HashSet<AnswerTerm> oths = new HashSet<>();
+            oths.add( at );
+            HashSet<HashSet<AnswerTerm>> ats = new HashSet<>();
+            ats.add( oths );
+            mappedVars.put( vars, ats );
+        }
         for ( HashSet<AnswerTerm> terms : set ) {
             HashSet<Variable> vars = new HashSet<>();
             HashSet<DataNF> nfs = new HashSet<>();
@@ -229,6 +251,9 @@ public class NormalForm {
                 }
             }
             if ( !nfs.isEmpty() ) {
+                //TODO println entfernen
+                //Wenn ich alles richtig gemacht habe, dürfte das hier nie feuern!
+                System.out.println("______________DATA NF VORHANDEN___________________");
                 //If there are multiple DataNFs, there could be two DataNFs with the same set of Vars. These have to be summarized.
                 DataNF nfsSummarized = new DataNF();
                 for ( DataNF nf : nfs ) {

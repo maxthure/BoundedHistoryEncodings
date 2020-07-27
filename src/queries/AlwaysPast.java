@@ -22,8 +22,12 @@ public class AlwaysPast implements Query{
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof AlwaysPast ) {
-            return ( this.subquery.equals( ( (AlwaysPast) query ).subquery ) );
+        if ( query instanceof PredicateQuery ) {
+            return query.equals( this );
+        } else {
+            if ( query instanceof AlwaysPast ) {
+                return ( this.subquery.equals( ( (AlwaysPast) query ).subquery ) );
+            }
         }
         return false;
     }

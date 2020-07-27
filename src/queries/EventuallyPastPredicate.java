@@ -28,13 +28,14 @@ public class EventuallyPastPredicate implements PredicateQuery{
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof EventuallyPastPredicate ) {
-            EventuallyPastPredicate q = (EventuallyPastPredicate) query;
-            return ( this.p == q.p && this.subquery.equals( q.subquery ) );
-        }
+        boolean temp = false;
         if (this.p == 0){
-            return this.subquery.equals( query );
+            temp = this.subquery.equals( query );
         }
-        return false;
+        if ( query instanceof EventuallyPastPredicate && !temp ) {
+            EventuallyPastPredicate q = (EventuallyPastPredicate) query;
+            temp = ( this.p == q.p && this.subquery.equals( q.subquery ) );
+        }
+        return temp;
     }
 }

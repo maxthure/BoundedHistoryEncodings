@@ -26,21 +26,21 @@ public class SincePredicate implements PredicateQuery {
     public int getP() {
         return p;
     }
-
-    @Override
+  @Override
     public String toString() {
         return "(" + subquery1 + " SPredicate" + p + " " + subquery2 + ")";
     }
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof SincePredicate ) {
-            SincePredicate q = (SincePredicate) query;
-            return ( this.p == q.p && this.subquery1.equals( q.subquery1 ) && this.subquery2.equals( q.subquery2 ) );
-        }
+        boolean temp = false;
         if (this.p == 0){
-            return this.subquery2.equals( query );
+            temp = this.subquery2.equals( query );
         }
-        return false;
+        if ( query instanceof SincePredicate && !temp ) {
+            SincePredicate q = (SincePredicate) query;
+            temp = ( this.p == q.p && this.subquery1.equals( q.subquery1 ) && this.subquery2.equals( q.subquery2 ) );
+        }
+        return temp;
     }
 }

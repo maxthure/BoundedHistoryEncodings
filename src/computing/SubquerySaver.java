@@ -70,7 +70,7 @@ public class SubquerySaver {
         } else if ( query instanceof StrongPreviousPredicate ) {
             StrongPreviousPredicate q = (StrongPreviousPredicate) query;
             if ( q.getP() == 0 ) {
-                savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
+                //savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
                 saveSubqueries( q.getSubquery(), pointInTime );
             } else if ( q.getP() == 1 ) {
                 savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
@@ -89,7 +89,7 @@ public class SubquerySaver {
         } else if ( query instanceof WeakPreviousPredicate ) {
             WeakPreviousPredicate q = (WeakPreviousPredicate) query;
             if ( q.getP() == 0 ) {
-                savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
+                //savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
                 saveSubqueries( q.getSubquery(), pointInTime );
             } else if ( q.getP() == 1 ) {
                 savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
@@ -108,7 +108,7 @@ public class SubquerySaver {
         } else if ( query instanceof AlwaysPastPredicate ) {
             AlwaysPastPredicate q = (AlwaysPastPredicate) query;
             if ( q.getP() == 0 ) {
-                savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
+                //savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
                 saveSubqueries( q.getSubquery(), pointInTime );
             } else if ( q.getP() == 1 ) {
                 savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
@@ -127,7 +127,7 @@ public class SubquerySaver {
         } else if ( query instanceof EventuallyPastPredicate ) {
             EventuallyPastPredicate q = (EventuallyPastPredicate) query;
             if ( q.getP() == 0 ) {
-                savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
+                //savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
                 saveSubqueries( q.getSubquery(), pointInTime );
             } else if ( q.getP() == 1 ) {
                 savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery() ) );
@@ -147,7 +147,8 @@ public class SubquerySaver {
         } else if ( query instanceof SincePredicate ) {
             SincePredicate q = (SincePredicate) query;
             if ( q.getP() == 0 ) {
-                savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery2() ) );
+                //savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery2() ) );
+                saveSubqueries( q.getSubquery1(), pointInTime );
                 saveSubqueries( q.getSubquery2(), pointInTime );
             } else if ( q.getP() == 1 ) {
                 savedSubqueries.add( functionPhi.compute( pointInTime, q.getSubquery2() ) );
@@ -171,10 +172,12 @@ public class SubquerySaver {
             if ( query instanceof PredicateQuery ) {
                 if ( i == p.getPointInTime() && query.equals( p.getQuery() ) ) {
                     return p.getDataNF();
+                    //return p.getAnswerTerm();
                 }
             } else {
                 if ( i == p.getPointInTime() && p.getQuery().equals( query ) ) {
                     return p.getDataNF();
+                    //return p.getAnswerTerm();
                 }
             }
         }
@@ -215,6 +218,7 @@ public class SubquerySaver {
                 }
             }
             st.close();
+            conn.close();
         } catch ( Exception e ) {
             e.printStackTrace();
         }

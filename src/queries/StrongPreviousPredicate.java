@@ -26,15 +26,16 @@ public class StrongPreviousPredicate implements PredicateQuery {
         return "StrongPreviousPredicate(" + p + ", "  + subquery + ")";
     }
 
-    @Override
+   @Override
     public boolean equals( Query query ) {
-        if ( query instanceof StrongPreviousPredicate ) {
-            StrongPreviousPredicate q = (StrongPreviousPredicate) query;
-            return ( this.p == q.p && this.subquery.equals( q.subquery ) );
-        }
+        boolean temp = false;
         if (this.p == 0){
-            return this.subquery.equals( query );
+            temp = this.subquery.equals( query );
         }
-        return false;
+        if ( query instanceof StrongPreviousPredicate && !temp ) {
+            StrongPreviousPredicate q = (StrongPreviousPredicate) query;
+            temp = ( this.p == q.p && this.subquery.equals( q.subquery ) );
+        }
+        return temp;
     }
 }

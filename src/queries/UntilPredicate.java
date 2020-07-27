@@ -34,13 +34,14 @@ public class UntilPredicate implements PredicateQuery {
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof UntilPredicate ) {
-            UntilPredicate q = (UntilPredicate) query;
-            return ( this.p == q.p && this.subquery1.equals( q.subquery1 ) && this.subquery2.equals( q.subquery2 ) );
-        }
+        boolean temp = false;
         if (this.p == 0){
-            return this.subquery2.equals( query );
+            temp = this.subquery2.equals( query );
         }
-        return false;
+        if ( query instanceof UntilPredicate && !temp ) {
+            UntilPredicate q = (UntilPredicate) query;
+            temp = ( this.p == q.p && this.subquery1.equals( q.subquery1 ) && this.subquery2.equals( q.subquery2 ) );
+        }
+        return temp;
     }
 }

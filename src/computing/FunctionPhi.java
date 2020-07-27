@@ -3,6 +3,8 @@ package computing;
 import results.*;
 import queries.*;
 
+import java.util.HashSet;
+
 /**
  * This class calculates PhiI (or Phi0)
  */
@@ -342,6 +344,33 @@ public class FunctionPhi {
                 }
                 return replaceVariables( timeInPoint, phiI( v.getPointInTime() + 1, subQ ) );
             }
+        }else if (answerTerm instanceof DataNF){
+            DataNF dataNF = (DataNF) answerTerm;
+            HashSet<AnswerTerm> conjunctions = new HashSet<>();
+            for ( HashSet<Variable> vars : dataNF.keySet() ) {
+                HashSet<HashSet<AnswerTerm>> ats = dataNF.get( vars );
+                if ( ats.size() != 1 ){
+                    throw new IllegalArgumentException();
+                }
+                HashSet<AnswerTerm> at = ats.iterator().next();
+                if ( at.size() != 1 ){
+                    throw new IllegalArgumentException();
+                }
+                AnswerTerm temp = at.iterator().next();
+                for ( Variable var : vars ) {
+                    temp = new AnswerTermConjunction( var, temp );
+                }
+                conjunctions.add( temp );
+            }
+            if(conjunctions.isEmpty()){
+                throw new IllegalArgumentException();
+            }
+            AnswerTerm temp = conjunctions.iterator().next();
+            conjunctions.remove( temp );
+            for ( AnswerTerm a : conjunctions ) {
+                temp = new AnswerTermDisjunction( a, temp );
+            }
+            return replaceVariables( timeInPoint, temp );
         }
         return answerTerm;
     }
