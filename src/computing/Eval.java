@@ -135,7 +135,7 @@ public class Eval {
             /*
              * Depending on the query inside the {@link Variable} it can evaluate to different queries
              */
-            if ( var.getQuery() instanceof StrongNext || var.getQuery() instanceof Until || var.getQuery() instanceof Eventually || var.getQuery() instanceof StrongNextPredicate || var.getQuery() instanceof UntilPredicate || var.getQuery() instanceof EventuallyPredicate ) {
+            if ( var.getQuery() instanceof StrongNext || var.getQuery() instanceof Until || var.getQuery() instanceof Eventually ) {
                 /*
                  * The variable evaluates to an empty set therefore returning nothing
                  */
@@ -198,23 +198,13 @@ public class Eval {
         boolean first = true;
         boolean top = false;
         for ( AnswerTerm term : answerTerms ) {
-            if ( !( term instanceof AnswerSet || term instanceof FilterAnswerSet ) ) {
+            if ( !( term instanceof AnswerSet ) ) {
                 throw new IllegalArgumentException();
             }
             String temp = "bottom";
             if ( term instanceof AnswerSet ) {
                 AnswerSet set = (AnswerSet) term;
                 temp = set.getAnswer();
-            }
-            else {
-                temp = prepareQuery( ( (FilterAnswerSet) term ).getAnswer() );
-                if ( temp.isEmpty() || temp.equals( "bottom" ) ) {
-                    temp = "bottom";
-                } else if ( temp.equals( "top" ) ) {
-                    temp = ( (FilterAnswerSet) term ).getQuery().getFilter().replace( "phi", "autos" );
-                } else {
-                    temp = ( (FilterAnswerSet) term ).getQuery().getFilter().replace( "phi", "(" + temp + ")" );
-                }
             }
             /*
              * If bottom occurs in the AnswerTerms the whole join will be empty

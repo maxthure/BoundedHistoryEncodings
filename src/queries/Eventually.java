@@ -3,7 +3,7 @@ package queries;
 /**
  * This class represents an eventually in a query.
  */
-public class Eventually implements Query{
+public class Eventually implements Query {
 
     private final Query subquery;
 
@@ -22,12 +22,8 @@ public class Eventually implements Query{
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof PredicateQuery ) {
-            return query.equals( this );
-        } else {
-            if ( query instanceof Eventually ) {
-                return ( this.subquery.equals( ( (Eventually) query ).subquery ) );
-            }
+        if ( query instanceof Eventually ) {
+            return ( this.subquery.equals( ( (Eventually) query ).subquery ) );
         }
         return false;
     }

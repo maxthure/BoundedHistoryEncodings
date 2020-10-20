@@ -22,12 +22,8 @@ public class StrongNext implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof PredicateQuery ) {
-            return query.equals( this );
-        } else {
-            if ( query instanceof StrongNext ) {
-                return ( this.subquery.equals( ( (StrongNext) query ).subquery ) );
-            }
+        if ( query instanceof StrongNext ) {
+            return ( this.subquery.equals( ( (StrongNext) query ).subquery ) );
         }
         return false;
     }

@@ -16,9 +16,9 @@ public class AnswerSet implements AnswerTerm {
         this.pointInTime = pointInTime;
         if ( query instanceof AtemporalQuery ) {
             answer = ( (AtemporalQuery) query ).getName();
-        } else if ( query instanceof StrongPrevious || query instanceof StrongPreviousPredicate ) {
+        } else if ( query instanceof StrongPrevious ) {
             answer = "bottom";
-        } else if ( query instanceof WeakPrevious || query instanceof WeakPreviousPredicate ) {
+        } else if ( query instanceof WeakPrevious ) {
             answer = "top";
         } else {
             answer = "invalid";

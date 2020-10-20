@@ -29,12 +29,8 @@ public class Until implements Query {
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof PredicateQuery ) {
-            return query.equals( this );
-        } else {
-            if ( query instanceof Until ) {
-                return ( this.subquery1.equals( ( (Until) query ).subquery1 ) && this.subquery2.equals( ( (Until) query ).subquery2 ) );
-            }
+        if ( query instanceof Until ) {
+            return ( this.subquery1.equals( ( (Until) query ).subquery1 ) && this.subquery2.equals( ( (Until) query ).subquery2 ) );
         }
         return false;
     }

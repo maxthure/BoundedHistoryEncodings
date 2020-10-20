@@ -84,50 +84,6 @@ public class FunctionPhi {
             return disjunction( phiZero( ( (Until) query ).getSubquery2() ), conjunction( phiZero( ( (Until) query ).getSubquery1() ), new Variable( 0, query ) ) );
         } else if ( query instanceof Since ) {
             return phiZero( ( (Since) query ).getSubquery2() );
-        } else if ( query instanceof StrongNextPredicate ) {
-            if ( ( (StrongNextPredicate) query ).getP() == 0 ) {
-                return phiZero( ( (StrongNextPredicate) query ).getSubquery() );
-            }
-            return new Variable( 0, query );
-        } else if ( query instanceof WeakNextPredicate ) {
-            if ( ( (WeakNextPredicate) query ).getP() == 0 ) {
-                return phiZero( ( (WeakNextPredicate) query ).getSubquery() );
-            }
-            return new Variable( 0, query );
-        } else if ( query instanceof StrongPreviousPredicate ) {
-            if ( ( (StrongPreviousPredicate) query ).getP() == 0 ) {
-                return phiZero( ( (StrongPreviousPredicate) query ).getSubquery() );
-            }
-            return new AnswerSet( query, 0 );
-        } else if ( query instanceof WeakPreviousPredicate ) {
-            if ( ( (WeakPreviousPredicate) query ).getP() == 0 ) {
-                return phiZero( ( (WeakPreviousPredicate) query ).getSubquery() );
-            }
-            return new AnswerSet( query, 0 );
-        } else if ( query instanceof AlwaysPredicate ) {
-            if ( ( (AlwaysPredicate) query ).getP() == 0 ) {
-                return phiZero( ( (AlwaysPredicate) query ).getSubquery() );
-            }
-            return conjunction( phiZero( ( (AlwaysPredicate) query ).getSubquery() ), new Variable( 0, query ) );
-        } else if ( query instanceof AlwaysPastPredicate ) {
-            return phiZero( ( (AlwaysPastPredicate) query ).getSubquery() );
-        } else if ( query instanceof EventuallyPredicate ) {
-            if ( ( (EventuallyPredicate) query ).getP() == 0 ) {
-                return phiZero( ( (EventuallyPredicate) query ).getSubquery() );
-            }
-            return disjunction( phiZero( ( (EventuallyPredicate) query ).getSubquery() ), new Variable( 0, query ) );
-        } else if ( query instanceof EventuallyPastPredicate ) {
-            return phiZero( ( (EventuallyPastPredicate) query ).getSubquery() );
-        } else if ( query instanceof UntilPredicate ) {
-            if ( ( (UntilPredicate) query ).getP() == 0 ) {
-                return phiZero( ( (UntilPredicate) query ).getSubquery2() );
-            }
-            return disjunction( phiZero( ( (UntilPredicate) query ).getSubquery2() ), conjunction( phiZero( ( (UntilPredicate) query ).getSubquery1() ), new Variable( 0, query ) ) );
-        } else if ( query instanceof SincePredicate ) {
-            return phiZero( ( (SincePredicate) query ).getSubquery2() );
-        } else if ( query instanceof Filter ) {
-            AnswerTerm temp = phiZero(( (Filter) query ).getSubquery() );
-            return new FilterAnswerSet( (Filter) query, 0, normalForm.prepareNF( temp ) );
         } else {
             return new AnswerSet( query, 0 );
         }
@@ -188,79 +144,6 @@ public class FunctionPhi {
             } else {
                 return disjunction( phiI( i, ( (Since) query ).getSubquery2() ), conjunction( phiI( i, ( (Since) query ).getSubquery1() ), phiI( i - 1, query ) ) );
             }
-        } else if ( query instanceof StrongNextPredicate ) {
-            if ( ( (StrongNextPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (StrongNextPredicate) query ).getSubquery() );
-            }
-            return new Variable( i, query );
-        } else if ( query instanceof StrongPreviousPredicate ) {
-            if ( ( (StrongPreviousPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (StrongPreviousPredicate) query ).getSubquery() );
-            }
-            if ( i <= 1 ) {
-                return phiZero( new StrongPreviousPredicate( ( (StrongPreviousPredicate) query ).getSubquery(), ( (StrongPreviousPredicate) query ).getP() - 1 ) );
-            } else {
-                return phiI( i - 1, new StrongPreviousPredicate( ( (StrongPreviousPredicate) query ).getSubquery(), ( (StrongPreviousPredicate) query ).getP() - 1 ) );
-            }
-        } else if ( query instanceof WeakNextPredicate ) {
-            if ( ( (WeakNextPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (WeakNextPredicate) query ).getSubquery() );
-            }
-            return new Variable( i, query );
-        } else if ( query instanceof WeakPreviousPredicate ) {
-            if ( ( (WeakPreviousPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (WeakPreviousPredicate) query ).getSubquery() );
-            }
-            if ( i <= 1 ) {
-                return phiZero( new WeakPreviousPredicate( ( (WeakPreviousPredicate) query ).getSubquery(), ( (WeakPreviousPredicate) query ).getP() - 1 ) );
-            } else {
-                return phiI( i - 1, new WeakPreviousPredicate( ( (WeakPreviousPredicate) query ).getSubquery(), ( (WeakPreviousPredicate) query ).getP() - 1 ) );
-            }
-        } else if ( query instanceof AlwaysPredicate ) {
-            if ( ( (AlwaysPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (AlwaysPredicate) query ).getSubquery() );
-            }
-            return conjunction( phiI( i, ( (AlwaysPredicate) query ).getSubquery() ), new Variable( i, query ) );
-        } else if ( query instanceof AlwaysPastPredicate ) {
-            if ( ( (AlwaysPastPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (AlwaysPastPredicate) query ).getSubquery() );
-            }
-            if ( i <= 1 ) {
-                return conjunction( phiI( i, ( (AlwaysPastPredicate) query ).getSubquery() ), phiZero( new AlwaysPastPredicate( ( (AlwaysPastPredicate) query ).getSubquery(), ( (AlwaysPastPredicate) query ).getP() - 1 ) ) );
-            } else {
-                return conjunction( phiI( i, ( (AlwaysPastPredicate) query ).getSubquery() ), phiI( i - 1, new AlwaysPastPredicate( ( (AlwaysPastPredicate) query ).getSubquery(), ( (AlwaysPastPredicate) query ).getP() - 1 ) ) );
-            }
-        } else if ( query instanceof EventuallyPredicate ) {
-            if ( ( (EventuallyPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (EventuallyPredicate) query ).getSubquery() );
-            }
-            return disjunction( phiI( i, ( (EventuallyPredicate) query ).getSubquery() ), new Variable( i, query ) );
-        } else if ( query instanceof EventuallyPastPredicate ) {
-            if ( ( (EventuallyPastPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (EventuallyPastPredicate) query ).getSubquery() );
-            }
-            if ( i <= 1 ) {
-                return disjunction( phiI( i, ( (EventuallyPastPredicate) query ).getSubquery() ), phiZero( new EventuallyPastPredicate( ( (EventuallyPastPredicate) query ).getSubquery(), ( (EventuallyPastPredicate) query ).getP() - 1 ) ) );
-            } else {
-                return disjunction( phiI( i, ( (EventuallyPastPredicate) query ).getSubquery() ), phiI( i - 1, new EventuallyPastPredicate( ( (EventuallyPastPredicate) query ).getSubquery(), ( (EventuallyPastPredicate) query ).getP() - 1 ) ) );
-            }
-        } else if ( query instanceof UntilPredicate ) {
-            if ( ( (UntilPredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (UntilPredicate) query ).getSubquery2() );
-            }
-            return disjunction( phiI( i, ( (UntilPredicate) query ).getSubquery2() ), conjunction( phiI( i, ( (UntilPredicate) query ).getSubquery1() ), new Variable( i, query ) ) );
-        } else if ( query instanceof SincePredicate ) {
-            if ( ( (SincePredicate) query ).getP() == 0 ) {
-                return phiI( i, ( (SincePredicate) query ).getSubquery2() );
-            }
-            if ( i <= 1 ) {
-                return disjunction( phiI( i, ( (SincePredicate) query ).getSubquery2() ), conjunction( phiI( i, ( (SincePredicate) query ).getSubquery1() ), phiZero( new SincePredicate( ( (SincePredicate) query ).getSubquery1(), ( (SincePredicate) query ).getSubquery2(), ( (SincePredicate) query ).getP() - 1 ) ) ) );
-            } else {
-                return disjunction( phiI( i, ( (SincePredicate) query ).getSubquery2() ), conjunction( phiI( i, ( (SincePredicate) query ).getSubquery1() ), phiI( i - 1, new SincePredicate( ( (SincePredicate) query ).getSubquery1(), ( (SincePredicate) query ).getSubquery2(), ( (SincePredicate) query ).getP() - 1 ) ) ) );
-            }
-        } else if ( query instanceof Filter ) {
-            AnswerTerm temp = phiI( i, ( (Filter) query ).getSubquery() );
-            return new FilterAnswerSet( (Filter) query, i, normalForm.prepareNF( temp )  );
         } else {
             return new AnswerSet( query, i );
         }
@@ -290,51 +173,6 @@ public class FunctionPhi {
                     subQ = ( (StrongNext) q ).getSubquery();
                 } else if ( q instanceof WeakNext ) {
                     subQ = ( (WeakNext) q ).getSubquery();
-                } else if ( q instanceof StrongNextPredicate ) {
-                    StrongNextPredicate sq = (StrongNextPredicate) q;
-                    if(sq.getP() == 0){
-                        //TODO println entfernen
-                        System.out.println("Das hier sollte nicht vorkommen!");
-                        subQ = sq.getSubquery();
-                    } else {
-                        subQ = new StrongNextPredicate( sq.getSubquery(), sq.getP()-1 );
-                    }
-                } else if ( q instanceof WeakNextPredicate ) {
-                    WeakNextPredicate sq = (WeakNextPredicate) q;
-                    if(sq.getP() == 0){
-                        //TODO println entfernen
-                        System.out.println("Das hier sollte nicht vorkommen!");
-                        subQ = sq.getSubquery();
-                    } else {
-                        subQ = new WeakNextPredicate( sq.getSubquery(), sq.getP()-1 );
-                    }
-                } else if ( q instanceof AlwaysPredicate ) {
-                    AlwaysPredicate sq = (AlwaysPredicate) q;
-                    if(sq.getP() == 0){
-                        //TODO println entfernen
-                        System.out.println("Das hier sollte nicht vorkommen!");
-                        subQ = sq.getSubquery();
-                    } else {
-                        subQ = new AlwaysPredicate( sq.getSubquery(), sq.getP()-1 );
-                    }
-                } else if ( q instanceof EventuallyPredicate ) {
-                    EventuallyPredicate sq = (EventuallyPredicate) q;
-                    if(sq.getP() == 0){
-                        //TODO println entfernen
-                        System.out.println("Das hier sollte nicht vorkommen!");
-                        subQ = sq.getSubquery();
-                    } else {
-                        subQ = new EventuallyPredicate( sq.getSubquery(), sq.getP()-1 );
-                    }
-                } else if ( q instanceof UntilPredicate ) {
-                    UntilPredicate sq = (UntilPredicate) q;
-                    if(sq.getP() == 0){
-                        //TODO println entfernen
-                        System.out.println("Das hier sollte nicht vorkommen!");
-                        subQ = sq.getSubquery2();
-                    } else {
-                        subQ = new UntilPredicate( sq.getSubquery1(), sq.getSubquery2(), sq.getP()-1 );
-                    }
                 } else {
                     subQ = q;
                 }

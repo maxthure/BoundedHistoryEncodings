@@ -3,7 +3,7 @@ package queries;
 /**
  * This class represents a some time in the past in a query.
  */
-public class EventuallyPast implements Query{
+public class EventuallyPast implements Query {
 
     private final Query subquery;
 
@@ -22,12 +22,8 @@ public class EventuallyPast implements Query{
 
     @Override
     public boolean equals( Query query ) {
-        if ( query instanceof PredicateQuery ) {
-            return query.equals( this );
-        } else {
-            if ( query instanceof EventuallyPast ) {
-                return ( this.subquery.equals( ( (EventuallyPast) query ).subquery ) );
-            }
+        if ( query instanceof EventuallyPast ) {
+            return ( this.subquery.equals( ( (EventuallyPast) query ).subquery ) );
         }
         return false;
     }
